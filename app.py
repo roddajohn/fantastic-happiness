@@ -1,8 +1,3 @@
-#Edmond Lam
-#SoftDev1 pd8
-#HW04 -- Big, Heavy, Wood
-#2016-10-02
-
 from flask import Flask, render_template, request, redirect, url_for, session
 import hashlib, os, utils.authenticate
 
@@ -24,17 +19,28 @@ app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\
 @app.route("/")
 def mainpage():
     if(session):
+        session['feedType'] = 'all';
         return redirect(url_for("feed"))
-    return redirect(url_for("login"))
+    return render_template("login_register.html")
 
 @app.route("/allStories")
 @app.route("/myStories")
 def feed():
+    if(session):
+        if(session['feedType'] == 'all'):
+            # gets dictionary of story objects sorted by time
+        if(session['feedType'] == 'my'):
+            # gets dictionary of story objects based on user database field "stories contributed to"
+    return redirect(url_for("mainpage"))
     
 @app.route("/login")
-def login():
+def authenticate():
 
+@app.route("/register")
+def register():
 
+@app.route("/logout")
+def logout():
     
 # @app.route("/jacobo")
 # def js():
