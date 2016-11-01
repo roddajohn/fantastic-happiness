@@ -1,39 +1,54 @@
 import hashlib
 import sqlite3
 
-f="users.db"
+f="sturdy-octo-train.db"
 db=sqlite3.connect(f)
 c=db.cursor()
 
 class User:
-    uid=0
+    user_id=0
     username=""
     password=""
     age=0
     email=""
-    contributed=""
+    posts_contributed_to=""
 
-    def update_pw(unhashed):
-        self.password=hash(unhashed)
+    #def update_pw(unhashed):
+        #self.password=hash(unhashed)
 
     def update():
-        c.execute("UPDATE users SET username=username,password=update_pw(password),age=age,email=email contributed=contributed WHERE uid=uid")
+        c.execute("UPDATE users SET username=%s,password=%s,age=%d,email=%s posts_contributed_to=%s WHERE user_id=%d"%(username,hash(password),age,email,pots_contributed_to,user_id))
         
-db.commit()
-db.close()
-
 def hash(unhashed):
     mho=hashlib.sha1()
     mho.update(unhashed)
     return mho.hexdigest()
 
+#0 username exists
+#1 success
 def register(username,password,age,email):
-    c.execute("select uid from users where username="+username)
+    c.execute("select user_id from users where username='%s'"%(username))
     data=c.fetchall()
     if len(data)!=0:
-        return false
-    c.execute("select uid from users")
+        return 0
+    c.execute("select user_id from users")
     data=c.fetchall()
-    c.execute("insert into users values (%d,%s,%s,%d,%s,"");"%(len(data)+1,username,hash(password),age,email))
-    return true
+    c.execute("insert into users values ('%d','%s','%s','%d','%s','');"%(len(data)+1,username,hash(password),age,email))
+    return 1
+
+"""
+#0 no such username
+def login(username,password):
+    c.execute("select password from users where username='%s'"%(username))
+    data=c.fetchall()
+    if len(data)==0:
+        return 0
+    print data
+    
+        
+login('homer','simpson')
+"""
+
+db.commit()
+db.close()
 
