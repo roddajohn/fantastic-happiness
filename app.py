@@ -1,12 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import hashlib, os, utils.authenticate
+import hashlib, os, utils.user_manager, utils.story_manager
 
 app = Flask(__name__)
 #creates instance of Flask and passes env variable __name__
-
-status = {}
-
-status.clear()
 
 app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\xc8?\x85\xdb\xd6;[\xae\xfb\xeb'
 
@@ -33,19 +29,29 @@ def feed():
             # gets dictionary of story objects based on user database field "stories contributed to"
     return redirect(url_for("mainpage"))
     
-@app.route("/login")
+@app.route("/login", methods=['POST'])
 def authenticate():
-
-@app.route("/register")
+    
+@app.route("/register", methods=['POST'])
 def register():
-
+    if(key in session):
+        return redirect(url_for("mainpage"))
+    if(!(key in request.form)         or
+       request.form['username'] == '' or
+       request.form['password'] == '' or
+       request.form['age']      == '' or
+       request.form['email']    == '')
+        return redirect(url_for("mainpage", message = "Please fill in all fields!"))
+    success = utils.user_manager.register(request.form['username'],request.form['password'],
+                                          request.form['age'],request.form['email'])
+    if(success == 1):
+        return redirect(url_for("mainpage", message = 'Success! : Please Sign In!'))
+    if(success == 0):
+        return redirect(url_for("mainpage", message = 'Username already taken!'))
+    
 @app.route("/logout")
 def logout():
-    
-# @app.route("/jacobo")
-# def js():
-#     return redirect(url_for("mainpage"))
-    
+  
 
 # @app.route("/login", methods=['POST'])
 # def authenticate():
