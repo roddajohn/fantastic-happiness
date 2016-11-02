@@ -31,6 +31,8 @@ def feed():
     
 @app.route("/login", methods=['POST'])
 def authenticate():
+    # on success: redirect to feed, set feedType to my
+    # on failure: kick to mainpage with message "not authenticated"
     
 @app.route("/register", methods=['POST'])
 def register():
@@ -51,6 +53,7 @@ def register():
     
 @app.route("/logout")
 def logout():
+    # pop username
   
 
 # @app.route("/login", methods=['POST'])
