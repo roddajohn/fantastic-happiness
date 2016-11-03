@@ -28,12 +28,13 @@ class Story:
     def get_timestamp(self):
         return time.time()
         
-    #updates the story's text file and latest_update
-    def update_story(self, text):
+    #updates the story's text file and latest_update/timestamp_latest_update/contributed_to_by_user_ids
+    def update_story(self, text, userid):
         self.timestamp_latest_update = self.get_timestamp()
         self.latest_update = text
         story_file = open(str(self.story_id)+".txt","r+")
         story_file.write(story_file.read()+text)
+        self.add_user(user_id)
 
     #initializes by setting all values to the given values
     def __init__(self, title, text, timestamp, creator_id):
@@ -44,6 +45,15 @@ class Story:
         self.timestamp_created = timestamp
         self.contributed_to_by_user_ids = str(creator_id)
         c.execute("INSERT INTO stories VALUES ('"+str(self.story_id)+"','"+self.title+"','"+self.latest_update+"','"+str(self.timestamp_latest_update)+"','"+str(self.timestamp_created)+"','"+self.contributed_to_by_user_ids+"')")
+
+
+#####################################################################
+# DO NOT MANUALLY CREATE STORY OBJECTS, INSTEAD USE THESE FUNCTIONS #
+# ----------------------------------------------------------------- #
+# create_story(title, text, timestamp, creator_id)                  #
+# get_story(story_id)                                               #
+# delete_story(story_id) * ONLY ADMIN USAGE *                       #
+#####################################################################
 
 #creates a new Story object with the given info and returns it
 def create_story(title, text, timestamp, creator_id):
@@ -67,9 +77,6 @@ def get_story(story_id):
 #deletes a story from the database by id
 def delete_story(story_id):
     c.execute("DELETE FROM STORIES WHERE story_id = %s" %str(story_id))
-
-for i in range(12):
-    delete_story(i)
     
 db.commit()
 db.close()
