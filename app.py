@@ -10,23 +10,41 @@ app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\
 # mainpage: login form or feed
 # settings: alter settings form
 # my stories: could be feed
+# full story
 # logout: logout
 
 @app.route("/")
 def mainpage():
-    if(session):
+    if(session['uid']):
         session['feedType'] = 'all';
         return redirect(url_for("feed"))
     return render_template("login_register.html")
 
 @app.route("/allStories")
+def allFeed():
+    if(session['uid']):
+        
+    return redirect(url_for("mainpage"))
+    
+
 @app.route("/myStories")
-def feed():
-    if(session):
-        if(session['feedType'] == 'all'):
-            # gets dictionary of story objects sorted by time
-        if(session['feedType'] == 'my'):
-            # gets dictionary of story objects based on user database field "stories contributed to"
+def myFeed():
+    if(session['uid']):
+
+        userContributions = utils.user_manager.get(session['uid']).posts_contributed_to
+
+        listContributionIDs = userContributions.split(",")
+        stories = []
+
+        for(element in listContributionIDs)
+            stories.append(utils.story_manager.get_story(int(element)))
+        # if(session['feedType'] == 'all'):
+        #     # gets dictionary of story objects sorted by time
+        # if(session['feedType'] == 'my'):
+        #     # gets dictionary of story objects based on user database field "stories contributed to"
+
+        ## figure out how to differentiate between all stories and my stories depending on which navbar option clicked
+            
     return redirect(url_for("mainpage"))
     
 @app.route("/login", methods=['POST'])
@@ -44,6 +62,8 @@ def register():
        request.form['age']      == '' or
        request.form['email']    == '')
         return redirect(url_for("mainpage", message = "Please fill in all fields!"))
+    if(request.form['password'] != request.form['confpass'])
+        return redirect(url_for("mainpage", message = "Passwords must match!"))
     success = utils.user_manager.register(request.form['username'],request.form['password'],
                                           request.form['age'],request.form['email'])
     if(success == 1):
@@ -53,7 +73,9 @@ def register():
     
 @app.route("/logout")
 def logout():
-    # pop username
+    session.pop('username')
+    session.pop('feedType')
+    return redirect(url_for("mainpage", message = "Successfully logged out!"))
   
 
 # @app.route("/login", methods=['POST'])
