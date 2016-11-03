@@ -1,12 +1,12 @@
 import sqlite3, time
 
 class Story:
-    story_id = 0
+    story_id = -1
     title = ""
     latest_update = ""
-    timestamp_latest_update = 0
-    timestamp_created = 0
-    contributed_to_by_user_ids = ""
+    timestamp_latest_update = -1
+    timestamp_created = -1
+    contributed_to_by_user_ids = "-1"
     c = None
     
     #assigns an id to the story
@@ -21,7 +21,6 @@ class Story:
     #adds a user to the string of users with commas in between
     def add_user(self, user_id):
         self.contributed_to_by_user_ids = self.contributed_to_by_user_ids+","+str(user_id)
-        self.update(db)
 
     #retrieves current time in UTC, seconds since epoch (Jan 1 1970)
     def get_timestamp(self):
@@ -41,7 +40,7 @@ class Story:
         c.execute("UPDATE stories SET title = %s , last_update = %s , timestamp_last_update = %s , timestamp_created = %s , contributed_to_by_users = %s WHERE story_id = %s" %title %last_update %timestamp_last_update %timestamp_created %contributed_to_by_user_ids %story_id)
         
     #initializes by setting all values to the given values
-    def __init__(self, c = None, title = '', text = '', timestamp = 0, creator_id = -1):
+    def __init__(self, c = None, new = False, title = '', text = '', timestamp = -1, creator_id = -1):
         self.c = c
         self.story_id = self.assign_id()
         self.title = title
@@ -49,7 +48,8 @@ class Story:
         self.timestamp_latest_update = timestamp
         self.timestamp_created = timestamp
         self.contributed_to_by_user_ids = str(creator_id)
-        self.c.execute("INSERT INTO stories VALUES ('"+str(self.story_id)+"','"+self.title+"','"+self.latest_update+"','"+str(self.timestamp_latest_update)+"','"+str(self.timestamp_created)+"','"+self.contributed_to_by_user_ids+"')")
+        if new:
+            self.c.execute("INSERT INTO stories VALUES ('"+str(self.story_id)+"','"+self.title+"','"+self.latest_update+"','"+str(self.timestamp_latest_update)+"','"+str(self.timestamp_created)+"','"+self.contributed_to_by_user_ids+"')")
 
 
 #####################################################################
@@ -75,19 +75,20 @@ def create_story(title, text, timestamp, creator_id):
     db = get_db()
     c = get_cursor(db)
     
-    ret = Story(c, title, text, timestamp, creator_id)
+    ret = Story(c, True, title, text, timestamp, creator_id)
+    ret.update_db()
     
-    db_close()
+    db_close(db)
     return ret
 
-#returns a Story object by id populated from the database
+#returns a Story object by id populated from the database, even if that story doesn't exist
 def get_story(story_id):
     db = get_db()
     c = get_cursor(db)
     
-    ret = Story()
+    ret = Story(c)
     ret.story_id = story_id
-    c.execute("SELECT * FROM STORIES WHERE story_id = %s",str(story_id))
+    c.execute("SELECT * FROM STORIES WHERE story_id = %s" %str(story_id))
     fetched = c.fetchall()
     for row in fetched:
         ret.title = row[1]
@@ -96,7 +97,7 @@ def get_story(story_id):
         ret.timestamp_created = row[4]
         ret.contributed_to_by_user_ids = row[5]
 
-    db_close()
+    db_close(db)
     return ret
 
 #deletes a story from the database by id
@@ -106,4 +107,4 @@ def delete_story(story_id):
     
     c.execute("DELETE FROM STORIES WHERE story_id = %s" %str(story_id))
 
-    db_close()
+    db_close(db)
