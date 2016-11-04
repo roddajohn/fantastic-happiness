@@ -13,6 +13,18 @@ class User:
     age=0
     email=""
     posts_contributed_to=""
+    permissions=""
+
+
+    def add_post_contributed_to(self,post):
+
+    def remove_post_contributed_to(self,post):
+
+    def add_permission(self,perm):
+
+    def remove_permission(self,perm):
+
+    def check_permission(self, perm):
 
     #change password then use this to update it
     def update_pw(self):
