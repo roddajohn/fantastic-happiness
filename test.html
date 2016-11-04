@@ -1,0 +1,42 @@
+<table>
+{% for story in feed %}
+<tr>
+  <td>
+    {{story.title}} - Created on {{story.timestamp_created}} - Contributions made by: {{story.contributed_to_by_user_ids}}
+    <br>
+    Latest contribution last made at {{story.get_timestamp}}
+    <br>
+    {{story.latest_update}}
+  </td>
+</tr>
+{% endfor % }
+</table>
+
+
+Stories you have contributed to:
+<br>
+<table>
+{% for story in feed %}
+<tr>
+  <td>
+    {{story.title}} - Created on {{story.timestamp_created}}
+  </td>
+</tr>
+{% endfor % }
+</table>
+
+
+All stories:
+<table>
+{% for story in feed %
+<tr>
+  <td>
+    {{story.title}} - Created on {{story.timestamp_created}} - Contributions made by: {{story.contributed_to_by_user_ids}}
+    <br>
+    Latest contribution last made at {{story.get_timestamp}}
+    <br>
+    {{story.latest_update}}
+  </td>
+</tr>
+{% endfor % }
+</table>
