@@ -1,7 +1,7 @@
 import hashlib
 import sqlite3
 
-f="sturdy-octo-train.db"
+f="./..data/sturdy-octo-train.db"
 
 
 class User:
@@ -13,6 +13,18 @@ class User:
     age=0
     email=""
     posts_contributed_to=""
+    permissions=""
+
+
+    def add_post_contributed_to(self,post):
+
+    def remove_post_contributed_to(self,post):
+
+    def add_permission(self,perm):
+
+    def remove_permission(self,perm):
+
+    def check_permission(self, perm):
 
     #change password then use this to update it
     def update_pw(self):
@@ -118,13 +130,3 @@ def exists(username):
     db.commit()
     db.close()
     return len(data)!=0
-
-"""        
-print register("homer","simpson",20,"blah@gmail.com")
-print login('homer','simpson')
-print login("homer","as")
-print exists("homer")
-print remove("homer")
-print exists("homer")
-print get(1)
-"""

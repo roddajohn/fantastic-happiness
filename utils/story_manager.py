@@ -15,7 +15,10 @@ class Story:
         fetched = self.c.fetchall()
         for row in fetched:
             last_id = row[0]
-        story_id = last_id+1
+        if last_id == None:
+            story_id = 0
+        else:
+            story_id = last_id+1
         return story_id
 
     #adds a user to the string of users with commas in between - works
@@ -24,7 +27,11 @@ class Story:
             self.contributed_to_by_user_ids = str(user_id)
         else:
             self.contributed_to_by_user_ids = self.contributed_to_by_user_ids+","+str(user_id)
-        
+
+    #returns full text of a story
+    def full_text(self):
+        return open("../data/stories/"+str(self.story_id)+".txt","r").read()
+               
     #updates the story's text file and latest_update/timestamp_latest_update/contributed_to_by_user_ids - works
     def update_story(self, text, userid, c_cur):
         self.timestamp_latest_update = get_timestamp()
@@ -33,7 +40,7 @@ class Story:
             story_file = open("../data/stories/"+str(self.story_id)+".txt","r+")
             story_file.write(story_file.read()+text)
         except IOError:
-            story_file = open("../data/stories/"+str(self.story_id)+".txt","w+")
+            story_file = open("../data/stories/"+str(self.story_id)+".txt","w")
             story_file.write(text)
         self.add_user(userid)
         self.update_db(c_cur)
@@ -58,7 +65,7 @@ class Story:
 #####################################################################
 # DO NOT MANUALLY CREATE STORY OBJECTS, INSTEAD USE THESE FUNCTIONS #
 # ----------------------------------------------------------------- #
-# create_story(title, text, timestamp, creator_id)                  #
+# create_story(title, text, creator_id)                             #
 # get_story(story_id)                                               #
 # delete_story(story_id) * ONLY ADMIN USAGE *                       #
 # order_by_timestamp()                                              #
