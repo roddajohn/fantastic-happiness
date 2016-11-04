@@ -20,6 +20,8 @@ class Story:
 
     #adds a user to the string of users with commas in between
     def add_user(self, user_id):
+        if self.contributed_to_by_user_ids == "":
+            self.contributed_to_by_user_ids = str(user_id)
         self.contributed_to_by_user_ids = self.contributed_to_by_user_ids+","+str(user_id)
 
     #retrieves current time in UTC, seconds since epoch (Jan 1 1970)
@@ -27,17 +29,21 @@ class Story:
         return time.time()
         
     #updates the story's text file and latest_update/timestamp_latest_update/contributed_to_by_user_ids
-    def update_story(self, text, userid):
+    def update_story(self, text, userid, c_cur):
         self.timestamp_latest_update = self.get_timestamp()
         self.latest_update = text
-        story_file = open(str(self.story_id)+".txt","r+")
-        story_file.write(story_file.read()+text)
-        self.add_user(user_id)
-        self.update(db)
+        try:
+            story_file = open("../data/stories/"+str(self.story_id)+".txt","r+")
+            story_file.write(story_file.read()+text)
+        except IOError:
+            story_file = open("../data/stories/"+str(self.story_id)+".txt","w+")
+            story_file.write(text)
+        self.add_user(userid)
+        self.update_db(c_cur)
 
     #updates the db with the latest values
-    def update_db(self):
-        c.execute("UPDATE stories SET title = %s , last_update = %s , timestamp_last_update = %s , timestamp_created = %s , contributed_to_by_users = %s WHERE story_id = %s" %title %last_update %timestamp_last_update %timestamp_created %contributed_to_by_user_ids %story_id)
+    def update_db(self, c_cur):
+        c_cur.execute("UPDATE stories SET title = ? , last_update = ? , timestamp_last_update = ? , timestamp_created = ? , contributed_to_by_users = ? WHERE story_id = ?",(self.title,self.latest_update,self.timestamp_latest_update,self.timestamp_created,self.contributed_to_by_user_ids,self.story_id))
         
     #initializes by setting all values to the given values
     def __init__(self, c = None, new = False, title = '', text = '', timestamp = -1, creator_id = -1):
@@ -47,8 +53,8 @@ class Story:
         self.latest_update = text
         self.timestamp_latest_update = timestamp
         self.timestamp_created = timestamp
-        self.contributed_to_by_user_ids = str(creator_id)
         if new:
+            self.update_story(text, creator_id, c)
             self.c.execute("INSERT INTO stories VALUES ('"+str(self.story_id)+"','"+self.title+"','"+self.latest_update+"','"+str(self.timestamp_latest_update)+"','"+str(self.timestamp_created)+"','"+self.contributed_to_by_user_ids+"')")
 
 
@@ -58,6 +64,7 @@ class Story:
 # create_story(title, text, timestamp, creator_id)                  #
 # get_story(story_id)                                               #
 # delete_story(story_id) * ONLY ADMIN USAGE *                       #
+# order_by_timestamp()                                              #
 #####################################################################
 
 def get_cursor(db):
@@ -76,7 +83,7 @@ def create_story(title, text, timestamp, creator_id):
     c = get_cursor(db)
     
     ret = Story(c, True, title, text, timestamp, creator_id)
-    ret.update_db()
+    ret.update_db(c)
     
     db_close(db)
     return ret
@@ -106,5 +113,38 @@ def delete_story(story_id):
     c = get_cursor(db)
     
     c.execute("DELETE FROM STORIES WHERE story_id = %s" %str(story_id))
+
+    db_close(db)
+
+#returns a list of story objects ordered by timestamp (if last is True, order by latest update, if false, order by creation)
+def order_by_timestamp(last):
+    db = get_db()
+    c = get_cursor(db)
+
+    if last:
+        c.execute("SELECT * FROM stories ORDER BY timestamp_last_update")
+    else:
+        c.execute("SELECT * FROM stories ORDER BY timestamp_created")
+        
+    ret = []
+    
+    fetched = c.fetchall()
+    for row in fetched:
+        ret.append(get_story(row[0]))
+
+    db_close(db)
+    
+    return ret
+
+#prints a story (for debugging purposes)
+def print_story(story):
+    print("story_id: {0}, title: {1}, last_update: {2}, timestamp_last_update: {3}, timestamp_created: {4}, contributed_to_by_users: {5}".format(story.story_id,story.title,story.latest_update,str(story.timestamp_latest_update),str(story.timestamp_created),story.contributed_to_by_user_ids))
+
+#updates a story given a Story object, text, and the user who wrote that text
+def update_story(story, text, userid):
+    db = get_db()
+    c = get_cursor(db)
+
+    story.update_story(text, userid, c)
 
     db_close(db)
