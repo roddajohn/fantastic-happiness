@@ -51,6 +51,8 @@
 		Latest contribution last made at {{story.get_timestamp}}
 		<br>
 		{{story.latest_update}}
+		<br>
+		<a href="{{url_for('fullPost', postId=story.id)}}">button</a>
 	      </td>
 	    </tr>
 	    {% endfor % }
