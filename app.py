@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import hashlib, os, utils.user_manager, utils.story_manager
 
 app = Flask(__name__)
@@ -22,15 +22,7 @@ def mainpage():
 @app.route("/allStories")
 def allFeed():
     if(session['username']):
-        stories = []
-        db = utils.story_manager.get_db()
-        c = utils.story_manager.get_cursor(db)
-        #arbitrary number of stories
-        #pls indlude as a function in story_manager.py
-        c.execute("SELECT timestamp_latest_update,story_id FROM STORIES ORDER BY timestamp_latest_update LIMIT 10")
-        fetched = c.fetchall()
-        for(row in fetched):
-            stories.append(utils.story_manager.get_story(int(row[0])))
+        stories = utils.story_manager.order_by_timestamp(True)
         return render_template("feed.html",feed = stories)
     return redirect(url_for("mainpage"))
     
@@ -70,7 +62,8 @@ def editPost():
             user = utils.user_manager.get(session['username'])
             story = utils.story_manager.get_story(request.form['postID'])
             story.update_story(request.form['edit'],user.user_id)
-            return redirect(url_for("myFeed",message = 'Story updated!'))
+            flash("Story updated!")
+            return redirect(url_for("myFeed"))
         return redirect(url_for("allFeed"))
     return redirect(url_for("mainpage"))
 
@@ -81,12 +74,15 @@ def authenticate():
     if(!(key in request.form)         or
        request.form['username'] == '' or
        request.form['password'] == ''):
-        return redirect(url_for("mainpage", message = "Please fill in all fields!"))
+        flash("Please fill in all fields!")
+        return redirect(url_for("mainpage"))
     loginSuccess = login(request.form['username'],request.form['password'])
     if(loginSuccess == 0):
-        return redirect(url_for("mainpage", message = "User does not exist!"))
+        flash("User does not exist!")
+        return redirect(url_for("mainpage"))
     if(loginSuccess == 2):
-        return redirect(url_for("mainpage", message = "Password is incorrect!"))
+        flash("Password is incorrect!")
+        return redirect(url_for("mainpage"))
     if(loginSuccess == 1):
         session['username'] = request.form['username']
 
@@ -103,21 +99,28 @@ def register():
        request.form['last']     == '' or
        request.form['age']      == '' or
        request.form['email']    == ''):
-        return redirect(url_for("mainpage", message = "Please fill in all fields!"))
-    if(request.form['password'] != request.form['confpass'])
-        return redirect(url_for("mainpage", message = "Passwords must match!"))
+        flash("Please fill in all fields!")
+        return redirect(url_for("mainpage"))
+    if(request.form['password'] != request.form['confpass']):
+        flash("Passwords must match!")
+        return redirect(url_for("mainpage"))
     success = utils.user_manager.register(request.form['username'],request.form['password'],
                                           request.form['first'],request.form['last'],
                                           request.form['age'],request.form['email'])
     if(success == 1):
-        return redirect(url_for("mainpage", message = 'Success! : Please Sign In!'))
+        flash("Success! : Please Sign In!")
+        return redirect(url_for("mainpage"))
     if(success == 0):
-        return redirect(url_for("mainpage", message = 'Username already taken!'))
+        flash("Username already taken!")
+        return redirect(url_for("mainpage"))
 
 @app.route("/updateSettings")
 def updateSettings():
     if(session['username']):
         if(!(key in request.form)):
+            return render_template("settings.html")
+        if(request.form['password'] != request.form['confpass']):
+            flash("Passwords do not match! Settings not updated")
             return render_template("settings.html")
         user = utils.user_manager.get(session['username'])
         if(!(request.form['email'] == '')):
@@ -128,68 +131,21 @@ def updateSettings():
             user.first = request.form['first']
         if(!(request.form['last'] == '')):
             user.last = request.form['last']
-        if(!(request.form['password'] == '') and
-           (request.form['password'] == request.form['confpass'])):
+        if(!(request.form['password'] == ''):
             user.password = request.form['password']
         user.update()
-        return render_template("settings.html",message = 'Settings updated!')
+        flash("Settings updated!")
+        return render_template("settings.html")
     return redirect(url_for("mainpage"))
 
-    
 @app.route("/logout")
 def logout():
     if(session['username']):
         session.pop('username')
-        return redirect(url_for("mainpage", message = "Successfully logged out!"))
+        flash("Successfully logged out!")
+        return redirect(url_for("mainpage"))
     return redirect(url_for("mainpage"))
-  
-
-# @app.route("/login", methods=['POST'])
-# def authenticate():
-#     user = request.form['username']
-#     pin = request.form['password']
-#     shaHash = hashlib.sha1()
-#     shaHash.update(pin)
-#     pinHash = shaHash.hexdigest()
-#     userslist = utils.authenticate.getUsers()
-#     print pinHash
-#     print userslist[user]
-#     if (user in userslist):
-#         if (userslist[user] == pinHash):
-#             session[user] = app.secret_key
-#             status['action'] = "success"
-#             status['username'] = user
-#             return redirect(url_for("mainpage"))
-#         status['action'] = 'fail1'
-#         return redirect(url_for("mainpage"))
-#     status['action'] = "fail1"
-#     return redirect(url_for("mainpage"))
-
-# @app.route("/register", methods=['POST'])
-# def register():
-#     user = request.form["user"]
-#     pin = request.form["pass"]
-#     shaHash = hashlib.sha1()
-#     shaHash.update(pin)
-#     passHash = shaHash.hexdigest()
-#     userslist = utils.authenticate.getUsers()
-#     if (user.find(',') == -1 or user == '' or pin == ''):
-#         status['action'] = 'fail3'
-#         redirect(url_for("mainpage"))
-#     if (user in userslist):
-#         status['action'] = 'fail2'
-#         return redirect(url_for("mainpage"))
-#     utils.authenticate.addUser(user,passHash)
-#     status['action'] = 'registered'
-#     return redirect(url_for("mainpage"))
-
-# @app.route("/logout", methods=['POST'])
-# def byebye():
-#     session.pop(status['username'])
-#     status.pop('username')
-#     status['action'] = 'logout'
-#     return redirect(url_for('mainpage'))
-    
+      
 if __name__ == "__main__":
     app.debug = True
     app.run()
