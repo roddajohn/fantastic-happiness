@@ -1,6 +1,8 @@
 import hashlib
 import sqlite3
 
+f="sturdy-octo-train.db"
+
 
 class User:
     user_id=0
@@ -12,14 +14,20 @@ class User:
     email=""
     posts_contributed_to=""
 
-    #def update_pw(unhashed):
-        #self.password=hash(unhashed)
-
-    def update(self):
-        f="sturdy-octo-train.db"
+    #change password then use this to update it
+    def update_pw(self):
         db=sqlite3.connect(f)
         c=db.cursor()
-        c.execute("update users set username='%s',password='%s',first='%s',last='%s',age=%d,email='%s', posts_contributed_to='%s' where user_id=%d"%(self.username,hash(self.password),self.first,self.last,self.age,self.email,self.posts_contributed_to,self.user_id))
+        c.execute("update users set password='%s' where user_id=%d"%(hash(self.password),self.user_id))
+        self.password=hash(self.password)
+        db.commit()
+        db.close()
+
+    #updates everything except password
+    def update(self):
+        db=sqlite3.connect(f)
+        c=db.cursor()
+        c.execute("update users set username='%s',first='%s',last='%s',age=%d,email='%s', posts_contributed_to='%s' where user_id=%d"%(self.username,self.first,self.last,self.age,self.email,self.posts_contributed_to,self.user_id))
         db.commit()
         db.close()
                
@@ -28,8 +36,8 @@ def hash(unhashed):
     mho.update(unhashed)
     return mho.hexdigest()
 
+#input is username
 def get(un):
-    f="sturdy-octo-train.db"
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select * from users where username='%s'"%(un))
@@ -50,7 +58,6 @@ def get(un):
 #0 username exists
 #1 success
 def register(username,password,first,last,age,email):
-    f="sturdy-octo-train.db"
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select user_id from users where username='%s'"%(username))
@@ -70,7 +77,6 @@ def register(username,password,first,last,age,email):
 #1 success
 #2 wrong password
 def login(username,password):
-    f="sturdy-octo-train.db"
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select password from users where username='%s'"%(username))
@@ -90,7 +96,6 @@ def login(username,password):
 #0 no such username
 #1 success
 def remove(username):
-    f="sturdy-octo-train.db"
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select user_id from users where username='%s'"%(username))
@@ -104,8 +109,8 @@ def remove(username):
     db.close()
     return 1
 
+#self explanatory
 def exists(username):
-    f="sturdy-octo-train.db"
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select user_id from users where username='%s'"%(username))
