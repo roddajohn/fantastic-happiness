@@ -11,7 +11,7 @@ class Story:
     
     #assigns an id to the story
     def assign_id(self):
-        self.c.execute("SELECT MAX(story_id)  FROM STORIES")
+        self.c.execute("SELECT MAX(story_id) FROM stories")
         fetched = self.c.fetchall()
         for row in fetched:
             last_id = row[0]
@@ -20,17 +20,14 @@ class Story:
 
     #adds a user to the string of users with commas in between
     def add_user(self, user_id):
-        if self.contributed_to_by_user_ids == "":
+        if self.contributed_to_by_user_ids == "-1":
             self.contributed_to_by_user_ids = str(user_id)
-        self.contributed_to_by_user_ids = self.contributed_to_by_user_ids+","+str(user_id)
-
-    #retrieves current time in UTC, seconds since epoch (Jan 1 1970)
-    def get_timestamp(self):
-        return time.time()
+        else:
+            self.contributed_to_by_user_ids = self.contributed_to_by_user_ids+","+str(user_id)
         
     #updates the story's text file and latest_update/timestamp_latest_update/contributed_to_by_user_ids
     def update_story(self, text, userid, c_cur):
-        self.timestamp_latest_update = self.get_timestamp()
+        self.timestamp_latest_update = get_timestamp()
         self.latest_update = text
         try:
             story_file = open("../data/stories/"+str(self.story_id)+".txt","r+")
@@ -71,7 +68,7 @@ def get_cursor(db):
     return db.cursor()
 
 def get_db():
-    return sqlite3.connect("sturdy-octo-train.db")
+    return sqlite3.connect("../data/sturdy-octo-train.db")
 
 def db_close(db):
     db.commit()
@@ -148,3 +145,7 @@ def update_story(story, text, userid):
     story.update_story(text, userid, c)
 
     db_close(db)
+
+#retrieves current time in UTC, seconds since epoch (Jan 1 1970)
+def get_timestamp():
+    return time.time()
