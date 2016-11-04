@@ -23,38 +23,57 @@ def mainpage():
 def allFeed():
     if(session['username']):
         stories = []
-        
         db = utils.story_manager.get_db()
         c = utils.story_manager.get_cursor(db)
-        
         #arbitrary number of stories
         #pls indlude as a function in story_manager.py
         c.execute("SELECT timestamp_latest_update,story_id FROM STORIES ORDER BY timestamp_latest_update LIMIT 10")
         fetched = c.fetchall()
-
         for(row in fetched):
             stories.append(utils.story_manager.get_story(int(row[0])))
-
         return render_template("feed.html",feed = stories)
-    
     return redirect(url_for("mainpage"))
     
 @app.route("/myStories")
 def myFeed():
     if(session['username']):
-
         userContributions = utils.user_manager.get(session['username']).posts_contributed_to
-
         listContributionIDs = userContributions.split(",")
         stories = []
-
         for(element in listContributionIDs)
             stories.append(utils.story_manager.get_story(int(element)))
-
         return render_template("feed.html",feed = stories)
-            
     return redirect(url_for("mainpage"))
-    
+
+@app.route("/fullPost", methods=['POST'])
+def fullPost():
+    if(session['username']):
+        if(request.form['postID']):
+            story = utils.story_manager.get_story(request.form['postID'])
+            return render_template("fullPost.html",post = story)
+        return redirect(url_for("myFeed"))
+    return redirect(url_for("mainpage"))
+
+@app.route("/latestUpdate")
+def latestUpdate():
+    if(session['username']):
+        if(request.form['postID']):
+            story = utils.story_manager.get_story(request.form['postID'])
+            return render_template("latestUpdate.html",post = story)
+        return redirect(url_for("allFeed"))
+    return redirect(url_for("mainpage"))
+
+@app.route("/editPost")
+def editPost():
+    if(session['username']):
+        if(request.form['postID'] and request.form['edit']):
+            user = utils.user_manager.get(session['username'])
+            story = utils.story_manager.get_story(request.form['postID'])
+            story.update_story(request.form['edit'],user.user_id)
+            return redirect(url_for("myFeed",message = 'Story updated!'))
+        return redirect(url_for("allFeed"))
+    return redirect(url_for("mainpage"))
+
 @app.route("/login", methods=['POST'])
 def authenticate():
     if(key in session):
@@ -70,7 +89,6 @@ def authenticate():
         return redirect(url_for("mainpage", message = "Password is incorrect!"))
     if(loginSuccess == 1):
         session['username'] = request.form['username']
-        return redirect(url_for("mainpage"))
 
     return redirect(url_for("mainpage"))
     
@@ -81,22 +99,49 @@ def register():
     if(!(key in request.form)         or
        request.form['username'] == '' or
        request.form['password'] == '' or
+       request.form['first']    == '' or
+       request.form['last']     == '' or
        request.form['age']      == '' or
        request.form['email']    == ''):
         return redirect(url_for("mainpage", message = "Please fill in all fields!"))
     if(request.form['password'] != request.form['confpass'])
         return redirect(url_for("mainpage", message = "Passwords must match!"))
     success = utils.user_manager.register(request.form['username'],request.form['password'],
+                                          request.form['first'],request.form['last'],
                                           request.form['age'],request.form['email'])
     if(success == 1):
         return redirect(url_for("mainpage", message = 'Success! : Please Sign In!'))
     if(success == 0):
         return redirect(url_for("mainpage", message = 'Username already taken!'))
+
+@app.route("/updateSettings")
+def updateSettings():
+    if(session['username']):
+        if(!(key in request.form)):
+            return render_template("settings.html")
+        user = utils.user_manager.get(session['username'])
+        if(!(request.form['email'] == '')):
+            user.email = request.form['email']
+        if(!(request.form['age'] == '')):
+            user.age = request.form['age']
+        if(!(request.form['first'] == '')):
+            user.first = request.form['first']
+        if(!(request.form['last'] == '')):
+            user.last = request.form['last']
+        if(!(request.form['password'] == '') and
+           (request.form['password'] == request.form['confpass'])):
+            user.password = request.form['password']
+        user.update()
+        return render_template("settings.html",message = 'Settings updated!')
+    return redirect(url_for("mainpage"))
+
     
 @app.route("/logout")
 def logout():
-    session.pop('username')
-    return redirect(url_for("mainpage", message = "Successfully logged out!"))
+    if(session['username']):
+        session.pop('username')
+        return redirect(url_for("mainpage", message = "Successfully logged out!"))
+    return redirect(url_for("mainpage"))
   
 
 # @app.route("/login", methods=['POST'])
