@@ -15,35 +15,43 @@ app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\
 
 @app.route("/")
 def mainpage():
-    if(session['uid']):
-        session['feedType'] = 'all';
-        return redirect(url_for("feed"))
+    if(session['username']):
+        return redirect(url_for("myFeed"))
     return render_template("login_register.html")
 
 @app.route("/allStories")
 def allFeed():
-    if(session['uid']):
+    if(session['username']):
+        stories = []
         
+        db = utils.story_manager.get_db()
+        c = utils.story_manager.get_cursor(db)
+        
+        #arbitrary number of stories
+        #pls indlude as a function in story_manager.py
+        c.execute("SELECT timestamp_latest_update,story_id FROM STORIES ORDER BY timestamp_latest_update LIMIT 10")
+        fetched = c.fetchall()
+
+        for(row in fetched):
+            stories.append(utils.story_manager.get_story(int(row[0])))
+
+        return render_template("feed.html",feed = stories)
+    
     return redirect(url_for("mainpage"))
     
-
 @app.route("/myStories")
 def myFeed():
-    if(session['uid']):
+    if(session['username']):
 
-        userContributions = utils.user_manager.get(session['uid']).posts_contributed_to
+        userContributions = utils.user_manager.get(session['username']).posts_contributed_to
 
         listContributionIDs = userContributions.split(",")
         stories = []
 
         for(element in listContributionIDs)
             stories.append(utils.story_manager.get_story(int(element)))
-        # if(session['feedType'] == 'all'):
-        #     # gets dictionary of story objects sorted by time
-        # if(session['feedType'] == 'my'):
-        #     # gets dictionary of story objects based on user database field "stories contributed to"
 
-        ## figure out how to differentiate between all stories and my stories depending on which navbar option clicked
+        return render_template("feed.html",feed = stories)
             
     return redirect(url_for("mainpage"))
     
@@ -74,7 +82,6 @@ def register():
 @app.route("/logout")
 def logout():
     session.pop('username')
-    session.pop('feedType')
     return redirect(url_for("mainpage", message = "Successfully logged out!"))
   
 
