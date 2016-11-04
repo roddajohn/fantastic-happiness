@@ -1,7 +1,7 @@
 import hashlib
 import sqlite3
 
-f="sturdy-octo-train.db"
+f="./..data/sturdy-octo-train.db"
 
 
 class User:
@@ -118,13 +118,3 @@ def exists(username):
     db.commit()
     db.close()
     return len(data)!=0
-
-"""        
-print register("homer","simpson",20,"blah@gmail.com")
-print login('homer','simpson')
-print login("homer","as")
-print exists("homer")
-print remove("homer")
-print exists("homer")
-print get(1)
-"""
