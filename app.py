@@ -57,8 +57,22 @@ def myFeed():
     
 @app.route("/login", methods=['POST'])
 def authenticate():
-    # on success: redirect to feed, set feedType to my
-    # on failure: kick to mainpage with message "not authenticated"
+    if(key in session):
+        return redirect(url_for("mainpage"))
+    if(!(key in request.form)         or
+       request.form['username'] == '' or
+       request.form['password'] == ''):
+        return redirect(url_for("mainpage", message = "Please fill in all fields!"))
+    loginSuccess = login(request.form['username'],request.form['password'])
+    if(loginSuccess == 0):
+        return redirect(url_for("mainpage", message = "User does not exist!"))
+    if(loginSuccess == 2):
+        return redirect(url_for("mainpage", message = "Password is incorrect!"))
+    if(loginSuccess == 1):
+        session['username'] = request.form['username']
+        return redirect(url_for("mainpage"))
+
+    return redirect(url_for("mainpage"))
     
 @app.route("/register", methods=['POST'])
 def register():
@@ -68,7 +82,7 @@ def register():
        request.form['username'] == '' or
        request.form['password'] == '' or
        request.form['age']      == '' or
-       request.form['email']    == '')
+       request.form['email']    == ''):
         return redirect(url_for("mainpage", message = "Please fill in all fields!"))
     if(request.form['password'] != request.form['confpass'])
         return redirect(url_for("mainpage", message = "Passwords must match!"))
