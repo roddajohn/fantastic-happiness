@@ -1,7 +1,7 @@
 import hashlib
 import sqlite3
 
-f="./..data/sturdy-octo-train.db"
+f="./../data/sturdy-octo-train.db"
 
 
 class User:
@@ -17,14 +17,28 @@ class User:
 
 
     def add_post_contributed_to(self,post):
+        self.posts_contributed_to+=","+post
 
     def remove_post_contributed_to(self,post):
+        posts=self.posts_contributed_to.split(',')
+        self.posts_contributed_to=""
+        for i in posts:
+            if i!=post:
+                self.posts_contributed_to+=i
 
     def add_permission(self,perm):
+        self.permissions+=","+perm
 
     def remove_permission(self,perm):
+        perms=self.permissions.split(',')
+        self.permissions=""
+        for i in perms:
+            if i!=perm:
+                self.permissions+=i
 
     def check_permission(self, perm):
+        perms=self.permissions.split(',')
+        return perm in perms
 
     #change password then use this to update it
     def update_pw(self):
@@ -36,10 +50,11 @@ class User:
         db.close()
 
     #updates everything except password
+    #user after adding/removing permissions/posts_contributed_to and after changing any user properties except 4 password
     def update(self):
         db=sqlite3.connect(f)
         c=db.cursor()
-        c.execute("update users set username='%s',first='%s',last='%s',age=%d,email='%s', posts_contributed_to='%s' where user_id=%d"%(self.username,self.first,self.last,self.age,self.email,self.posts_contributed_to,self.user_id))
+        c.execute("update users set username='%s',first='%s',last='%s',age=%d,email='%s',posts_contributed_to='%s',permissions='%s' where user_id=%d"%(self.username,self.first,self.last,self.age,self.email,self.posts_contributed_to,self.permissions,self.user_id))
         db.commit()
         db.close()
                
@@ -63,6 +78,7 @@ def get(un):
     user.age=data[0][5]
     user.email=data[0][6]
     user.posts_contributed_to=data[0][7]
+    user.permissions=data[0][8]
     db.commit()
     db.close()
     return user
@@ -80,7 +96,7 @@ def register(username,password,first,last,age,email):
         return 0
     c.execute("select user_id from users")
     data=c.fetchall()
-    c.execute("insert into users values ('%d','%s','%s','%s','%s','%d','%s','')"%(len(data)+1,username,hash(password),first,last,age,email))
+    c.execute("insert into users values ('%d','%s','%s','%s','%s','%d','%s','','')"%(len(data)+1,username,hash(password),first,last,age,email))
     db.commit()
     db.close()
     return 1
