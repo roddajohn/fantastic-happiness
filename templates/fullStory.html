@@ -1,0 +1,39 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% set active_page = "allStories" %}
+
+{% block content %}
+  <br>
+  <center>
+    <h4>{{ message }}</h4>
+  </center>
+  <br>
+  <div class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-8 text-left">
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <center>
+	    <h4>Full Story of {{post.title}}</h4>
+	  </center>
+	</div>
+	<div class="panel-body">
+	  Created:{{post.timestamp_created}}
+	  <br>
+	  Contributors: {{post.contributed_to_by_user_ids}}
+	  <br>
+	  Latest Contribution made at {{post.get_timestamp}}
+	  <br>
+	  Full Text:
+	  <br>
+	  {{story.full_text}}
+	  <br>
+	  <br>
+	</div>
+      </div>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+{% endblock %}

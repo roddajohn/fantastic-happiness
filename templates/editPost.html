@@ -1,0 +1,41 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% set active_page = "allStories" %}
+
+{% block content %}
+  <br>
+  <center>
+    <h4>{{ message }}</h4>
+  </center>
+  <br>
+  <div class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-8 text-left">
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <center>
+	    <h4>Edit this Story!</h4>
+	  </center>
+	</div>
+	<div class="panel-body">
+	  <form role="form" id="create" action="/editPost" method="POST">
+	    Title: {{ post.title }}
+	    <br>
+	    Latest Update:
+	    <br>
+	    {{post.latest_update}}
+	    <br>
+	    Your Contribution:
+	    <textarea name="story" form="create" rows="4" cols="100">Story Here</textarea>
+	    <br>
+	    <input type="hidden" name="postID" value="{{post.story_id}}">
+	    <input class="" type="submit" name="Register" value="Submit!">
+	  </form>
+	  
+	</div>
+      </div>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>

@@ -21,9 +21,11 @@
 	</div>
 	<div class="panel-body">
 	  <form role="form" action="/login" method="POST">
-	    <input class="" type="text" name="username" placeholder="Username">
-	    <input class="" type="text" name="password" placeholder="Password">
-	     <input class="" type="submit" name="Register" placeholder="Register">
+	    Username: <input class="" type="text" name="username" placeholder="Username">
+	    <br>
+	    Password: <input class="" type="text" name="password" placeholder="Password">
+	    <br>
+	    <input class="" type="submit" name="Register" value="Login">
 	  </form>
 	</div>
       </div>
@@ -32,19 +34,26 @@
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
-	    <h4>Login</h4>
+	    <h4>Register</h4>
 	  </center>
 	</div>
 	<div class="panel-body">
-	  <form role="form" action="/register" method="POST">
-	    <input class="" type="text" name="first" placeholder="First Name">
-	    <input class="" type="text" name="last" placeholder="Last Name">
-	    <input class="" type="text" name="age" placeholder="Age">
-	    <input class="" type="text" name="email" placeholder="Email">
-	    <input class="" type="text" name="username" placeholder="Username">
-	    <input class="" type="text" name="password" placeholder="Password">
-	    <input class="" type="text" name="confpass" placeholder="Confirm Password">
-	    <input class="" type="submit" name="Register" placeholder="Register">
+	  <form role="form" action="/updateSettings" method="POST">
+	    First Name: <input class="" type="text" name="first" placeholder="First Name">
+	    <br>
+	    Last Name: <input class="" type="text" name="last" placeholder="Last Name">
+	    <br>
+	    Age: <input class="" type="text" name="age" placeholder="Age">
+	    <br>
+	    Email: <input class="" type="text" name="email" placeholder="Email">
+	    <br>
+	    Username: <input class="" type="text" name="username" placeholder="Username">
+	    <br>
+	    Password: <input class="" type="text" name="password" placeholder="Password">
+	    <br>
+	    Confirm Password: <input class="" type="text" name="confpass" placeholder="Confirm Password">
+	    <br>
+	    <input class="" type="submit" name="Register" value="Register!">
 	  </form>
 	</div>
       </div>

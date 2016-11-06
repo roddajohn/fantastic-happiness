@@ -1,7 +1,7 @@
 <!-- extend from base layout -->
 {% extends "base.html" %}
 
-{% set active_page = "allStories" %}
+{% set active_page = "updateSettings" %}
 
 {% block content %}
   <br>
@@ -20,7 +20,15 @@
 	  </center>
 	</div>
 	<div class="panel-body">
-	  
+	  <form role="form" action="/updateSettings" method="POST">
+	    First Name: <input class="" type="text" name="first" placeholder="First Name">
+	    Last Name: <input class="" type="text" name="last" placeholder="Last Name">
+	    Age: <input class="" type="text" name="age" placeholder="Age">
+	    Email: <input class="" type="text" name="email" placeholder="Email">
+	    Password: <input class="" type="text" name="password" placeholder="Password">
+	    Confirm Password: <input class="" type="text" name="confpass" placeholder="Confirm Password">
+	    <input class="" type="submit" value="Save" name="Submit">
+	  </form>
 	</div>
       </div>
     </div>

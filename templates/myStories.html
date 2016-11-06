@@ -16,17 +16,16 @@
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
-	    <h4>Login</h4>
+	    <h4>All of Your Contributions</h4>
 	  </center>
 	</div>
 	<div class="panel-body">
-	  Stories you have contributed to:
 	  <br>
 	  <table>
 	    {% for story in feed %}
 	    <tr>
 	      <td>
-		{{story.title}} - Created on {{story.timestamp_created}}
+		<a href="{{url_for('fullPost', postId=story.id)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
 	      </td>
 	    </tr>
 	    {% endfor % }
@@ -38,7 +37,7 @@
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
-	    <h4>Register</h4>
+	    <h4>Your Recent Contributions</h4>
 	  </center>
 	</div>
 	<div class="panel-body">
@@ -52,7 +51,7 @@
 		<br>
 		{{story.latest_update}}
 		<br>
-		<a href="{{url_for('fullPost', postId=story.id)}}">button</a>
+		<a href="{{url_for('fullPost', postId=story.id)}}">View Full Here</a>
 	      </td>
 	    </tr>
 	    {% endfor % }

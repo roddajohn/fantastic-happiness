@@ -10,23 +10,31 @@
   </center>
   <br>
   <div class="row">
+    <div class="col-sm-3">
+      <div class="panel-body">
+	<a href="static/createPost.html">Create Your Story Here!</a>
+      </div>
+    </div>
+    <div class="col-sm-9">
+    </div>
+  </div>
+  <div class="row">
     <div class="col-sm-1">
     </div>
     <div class="col-sm-3 text-left">
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
-	    <h4>Login</h4>
+	    <h4>All Stories:</h4>
 	  </center>
 	</div>
 	<div class="panel-body">
-	  Stories you have contributed to:
 	  <br>
 	  <table>
 	    {% for story in feed %}
 	    <tr>
 	      <td>
-		{{story.title}} - Created on {{story.timestamp_created}}
+		<a href="{{url_for('latestUpdate', postId=story.id)}}">{{story.title}} - {{story.timestamp_created}}</a>
 	      </td>
 	    </tr>
 	    {% endfor % }
@@ -38,7 +46,7 @@
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
-	    <h4>Register</h4>
+	    <h4>Recent Stories</h4>
 	  </center>
 	</div>
 	<div class="panel-body">
@@ -46,11 +54,13 @@
 	    {% for story in feed %}
 	    <tr>
 	      <td>
-		{{story.title}} - Created on {{story.timestamp_created}} - Contributions made by: {{story.contributed_to_by_user_ids}}
+		{{story.title}} - Created on {{story.timestamp_created}} - Contributors: {{story.contributed_to_by_user_ids}}
 		<br>
-		Latest contribution last made at {{story.get_timestamp}}
+		Latest Contribution made at {{story.get_timestamp}}
 		<br>
 		{{story.latest_update}}
+		<br>
+		<a href="{{url_for('latestUpdate', postID=story.id)}}">View Latest Contribution</a>
 	      </td>
 	    </tr>
 	    {% endfor % }

@@ -1,0 +1,40 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% set active_page = "myStories" %}
+
+{% block content %}
+  <br>
+  <center>
+    <h4>{{ message }}</h4>
+  </center>
+  <br>
+  <div class="row">
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-8 text-left">
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <center>
+	    <h4>Latest Update to {{post.title}}</h4>
+	  </center>
+	</div>
+	<div class="panel-body">
+	  Created:{{post.timestamp_created}}
+	  <br>
+	  Contributors: {{post.contributed_to_by_user_ids}}
+	  <br>
+	  Latest Contribution made at {{post.get_timestamp}}
+	  <br>
+	  Latest Update:
+	  <br>
+	  {{story.latest_update}}
+	  <br>
+	  <a href='{{render_template("editPost.html", var=post}}'>Want to Contribute to This Story?</a>
+	  <br>
+	</div>
+      </div>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+{% endblock %}
