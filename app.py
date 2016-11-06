@@ -55,11 +55,27 @@ def latestUpdate(postID):
         return redirect(url_for("allFeed"))
     return redirect(url_for("mainpage"))
 
+@app.route("/createstory")
+def createStory():
+    if(session['username']):
+        if(request.form['story'] and request.form['title']):
+            user = utils.user_manager.get(session['username'])
+            utils.story_manager.create_story(request.form['title'],request.form['text'],user.user_id)
+            flash("Story Created!")
+            return redirect(url_for("myFeed"))
+        flash("Fill in all fields!")
+        return redirect(url_for("allFeed"))
+    return redirect(url_for("mainpage"))
+
 @app.route("/editPost")
 def editPost():
     if(session['username']):
         if(request.form['postID'] and request.form['edit']):
             user = utils.user_manager.get(session['username'])
+            storiesCont = (user.posts_contributed_to).split(",")
+            if(request.form['postID'] in storiesCont):
+                flash("You've already contributed to this story!")
+                return redirect(url_for("myFeed"))
             story = utils.story_manager.get_story(request.form['postID'])
             story.update_story(request.form['edit'],user.user_id)
             flash("Story updated!")
