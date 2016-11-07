@@ -24,7 +24,7 @@ def mainpage():
 def allFeed():
     if 'username' in session:
         stories = utils.story_manager.order_by_timestamp(True)
-        return render_template("myStories.html",feed = stories)
+        return render_template("index.html",feed = stories)
     return redirect(url_for("mainpage"))
     
 @app.route("/myStories")
