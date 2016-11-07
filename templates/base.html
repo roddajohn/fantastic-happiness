@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename="img/favicon.png") }}">
+    <link rel="icon" href="{{ url_for('static', filename="") }}">
     
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
@@ -60,9 +60,9 @@
   <body>
     
     {% set navigation_bar = [
-    ('allFeed', 'allFeed', 'All Stories', 'all'),
+    ('allFeed', 'allFeed', 'All Stories', 'user'),
     ('myFeed', 'myFeed', 'My Stories', 'user'),
-    ('updatesettings', 'updatesettings', 'Settings', 'user'),
+    ('updateSettings', 'updateSettings', 'Settings', 'user'),
     ('logout', 'logout', 'Logout', 'user')
     ]
     %}
@@ -75,7 +75,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>                        
 	  </button>
-	  <a class="navbar-brand" href="{{ url_for('mainpage') }}">Open House</a>
+	  <a class="navbar-brand" href="{{ url_for('mainpage') }}">Story Time</a>
 	</div>
 	<div class="collapse navbar-collapse" id="myNavbar">
 	  <ul class="nav navbar-nav">
