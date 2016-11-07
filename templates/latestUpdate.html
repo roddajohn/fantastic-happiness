@@ -28,9 +28,9 @@
 	  <br>
 	  Latest Update:
 	  <br>
-	  {{story.latest_update}}
+	  {{post.latest_update}}
 	  <br>
-	  <a href='{{render_template("editPost.html", var=post)}}'>Want to Contribute to This Story?</a>
+	  <a href="{{url_for('editPage', postID=post.story_id)}}">Want to Contribute to This Story?</a>
 	  <br>
 	</div>
       </div>

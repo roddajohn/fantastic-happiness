@@ -34,9 +34,10 @@
 	    {% for story in feed %}
 	    <tr>
 	      <td>
-		<a href="{{url_for('.latestUpdate', postID = story.story_id)}}">{{story.title}} - {{story.timestamp_created}}</a>
+		<a href="{{url_for('latestUpdate', postID = story.story_id)}}">{{story.title}} - {{story.timestamp_created}}</a>
 	      </td>
 	    </tr>
+	    <br>
 	    {% endfor %}
 	  </table>
 	</div>

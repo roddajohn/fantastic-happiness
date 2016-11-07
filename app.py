@@ -44,7 +44,7 @@ def myFeed():
 @app.route("/fullPost/<int:postId>", methods=['GET'])
 def fullPost(postId):
     if 'username' in session:
-        story = utils.story_manager.get_story(postID) ### DOESNT RETURN A VALID STORY CAUSES AN ERROR
+        story = utils.story_manager.get_story(postId) ### DOESNT RETURN A VALID STORY CAUSES AN ERROR
         return render_template("fullPost.html",post = story)
     return redirect(url_for("mainpage"))
 
@@ -69,6 +69,12 @@ def createStory():
             return redirect(url_for("myFeed"))
         flash("Fill in all fields!")
         return redirect(url_for("allFeed"))
+    return redirect(url_for("mainpage"))
+
+@app.route("/editPage/<int:postID>")
+def editPage(postID):
+    if 'username' in session:
+        return render_template("editPost.html", post=postID)
     return redirect(url_for("mainpage"))
 
 @app.route("/editPost", methods=['POST'])

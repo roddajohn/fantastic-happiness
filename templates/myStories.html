@@ -34,7 +34,7 @@
 	    {% for story in feed %}
 	    <tr>
 	      <td>
-		<a href="{{url_for('fullPost', postID=story.story_id)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
+		<a href="{{url_for('fullPost', postID=story)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
 	      </td>
 	    </tr>
 	    {% endfor %}
