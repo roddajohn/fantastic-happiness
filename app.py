@@ -59,6 +59,10 @@ def latestUpdate(postID):
         #return redirect(url_for("allFeed"))
     return redirect(url_for("mainpage"))
 
+@app.route("/rendercreate")
+def renderCreate():
+    return render_template("createPost.html")
+
 @app.route("/createstory")
 def createStory():
     if 'username' in session:
