@@ -44,19 +44,15 @@ def myFeed():
 @app.route("/fullPost/<int:postId>", methods=['GET'])
 def fullPost(postId):
     if 'username' in session:
-        #if(request.form['postID']): # want to put a checker if statement here but dont know how yet
-        story = utils.story_manager.get_story(postID)
+        story = utils.story_manager.get_story(postID) ### DOESNT RETURN A VALID STORY CAUSES AN ERROR
         return render_template("fullPost.html",post = story)
-        #return redirect(url_for("myFeed"))
     return redirect(url_for("mainpage"))
 
 @app.route("/latestUpdate/<int:postID>")
 def latestUpdate(postID):
     if 'username' in session:
-        #if(request.form['postID']): # want to put a checker if statement here but dont know how yet
-        story = utils.story_manager.get_story(postID)
+        story = utils.story_manager.get_story(postID) ### DOESNT RETURN A VALID STORY CAUSES AN ERROR
         return render_template("latestUpdate.html",post = story)
-        #return redirect(url_for("allFeed"))
     return redirect(url_for("mainpage"))
 
 @app.route("/rendercreate")
@@ -78,14 +74,14 @@ def createStory():
 @app.route("/editPost", methods=['POST'])
 def editPost():
     if 'username' in session:
-        if(request.form['postID'] and request.form['edit']):
+        if(request.form['postID'] and request.form['story']):
             user = utils.user_manager.get(session['username'])
             storiesCont = (user.posts_contributed_to).split(",")
             if(request.form['postID'] in storiesCont):
                 flash("You've already contributed to this story!")
                 return redirect(url_for("myFeed"))
             story = utils.story_manager.get_story(request.form['postID'])
-            story.update_story(request.form['edit'],user.user_id)
+            story.update_story(request.form['story'],user.user_id)
             flash("Story updated!")
             return redirect(url_for("myFeed"))
         return redirect(url_for("allFeed"))
@@ -133,7 +129,7 @@ def register():
 @app.route("/updateSettings", methods=['POST'])
 def updateSettings():
     if 'username' in session:
-        if not key in request.form:
+        if not request.form:
             return render_template("settings.html")
         if(request.form['password'] != request.form['confpass']):
             flash("Passwords do not match! Settings not updated")
