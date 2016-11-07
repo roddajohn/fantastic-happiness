@@ -40,8 +40,8 @@ def myFeed():
         return render_template("myStories.html",feed = stories)
     return redirect(url_for("mainpage"))
 
-@app.route("/fullPost/<int:postID>", methods=['GET'])
-def fullPost(postID):
+@app.route("/fullPost/<int:postId>", methods=['GET'])
+def fullPost(postId):
     if 'username' in session:
         #if(request.form['postID']): # want to put a checker if statement here but dont know how yet
         story = utils.story_manager.get_story(postID)
@@ -49,7 +49,7 @@ def fullPost(postID):
         #return redirect(url_for("myFeed"))
     return redirect(url_for("mainpage"))
 
-@app.route("/latestUpdate/<int:postID>", methods=['GET'])
+@app.route("/latestUpdate/<int:postID>")
 def latestUpdate(postID):
     if 'username' in session:
         #if(request.form['postID']): # want to put a checker if statement here but dont know how yet
