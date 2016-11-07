@@ -1,7 +1,7 @@
 import hashlib
 import sqlite3
 
-f="../data/sturdy-octo-train.db"
+f="data/sturdy-octo-train.db"
 
 
 class User:

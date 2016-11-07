@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import utils
+import utils, sqlite3
 import hashlib, os, utils.user_manager, utils.story_manager
 
 app = Flask(__name__)

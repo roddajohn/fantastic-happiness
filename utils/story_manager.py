@@ -30,17 +30,17 @@ class Story:
 
     #returns full text of a story
     def full_text(self):
-        return open("../data/stories/"+str(self.story_id)+".txt","r").read()
+        return open("data/stories/"+str(self.story_id)+".txt","r").read()
                
     #updates the story's text file and latest_update/timestamp_latest_update/contributed_to_by_user_ids - works
     def update_story(self, text, userid, c_cur):
         self.timestamp_latest_update = get_timestamp()
         self.latest_update = text
         try:
-            story_file = open("../data/stories/"+str(self.story_id)+".txt","r+")
+            story_file = open("data/stories/"+str(self.story_id)+".txt","r+")
             story_file.write(story_file.read()+text)
         except IOError:
-            story_file = open("../data/stories/"+str(self.story_id)+".txt","w")
+            story_file = open("data/stories/"+str(self.story_id)+".txt","w")
             story_file.write(text)
         self.add_user(userid)
         self.update_db(c_cur)
@@ -75,7 +75,7 @@ def get_cursor(db):
     return db.cursor()
 
 def get_db():
-    return sqlite3.connect("../data/sturdy-octo-train.db")
+    return sqlite3.connect("data/sturdy-octo-train.db")
 
 def db_close(db):
     db.commit()
@@ -117,7 +117,7 @@ def delete_story(story_id):
     c = get_cursor(db)
     
     c.execute("DELETE FROM STORIES WHERE story_id = %s" %str(story_id))
-    os.remove("../data/stories/"+str(story_id)+".txt")
+    os.remove("data/stories/"+str(story_id)+".txt")
 
     db_close(db)
 
