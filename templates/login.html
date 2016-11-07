@@ -4,15 +4,12 @@
 {% set active_page = "login" %}
 
 {% block content %}
-  <br>
-  <center>
-    <h4>{{ message }}</h4>
-  </center>
-  <br>
   <div class="row">
     <div class="col-sm-2">
     </div>
-    <div class="col-sm-4 text-left">
+    <div class="col-sm-4">
+      <br>
+      <br>
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
@@ -21,16 +18,18 @@
 	</div>
 	<div class="panel-body">
 	  <form role="form" action="/login" method="POST">
-	    Username: <input class="" type="text" name="username" placeholder="Username">
+	    Username: <input class="form-control" type="text" name="username" placeholder="Username">
 	    <br>
-	    Password: <input class="" type="text" name="password" placeholder="Password">
+	    Password: <input class="form-control" type="password" name="password" placeholder="Password">
 	    <br>
-	    <input class="" type="submit" name="Register" value="Login">
+	    <input class="form-control" type="submit" name="Register" value="Login">
 	  </form>
 	</div>
       </div>
     </div>
-    <div class="col-sm-4 text-right">
+    <div class="col-sm-4">
+      <br>
+      <br>
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
@@ -39,21 +38,21 @@
 	</div>
 	<div class="panel-body">
 	  <form role="form" action="/updateSettings" method="POST">
-	    First Name: <input class="" type="text" name="first" placeholder="First Name">
+	    First Name: <input class="form-control" type="text" name="first" placeholder="First Name">
 	    <br>
-	    Last Name: <input class="" type="text" name="last" placeholder="Last Name">
+	    Last Name: <input class="form-control" type="text" name="last" placeholder="Last Name">
 	    <br>
-	    Age: <input class="" type="text" name="age" placeholder="Age">
+	    Age: <input class="form-control" type="text" name="age" placeholder="Age">
 	    <br>
-	    Email: <input class="" type="text" name="email" placeholder="Email">
+	    Email: <input class="form-control" type="text" name="email" placeholder="Email">
 	    <br>
-	    Username: <input class="" type="text" name="username" placeholder="Username">
+	    Username: <input class="form-control" type="text" name="username" placeholder="Username">
 	    <br>
-	    Password: <input class="" type="text" name="password" placeholder="Password">
+	    Password: <input class="form-control" type="password" name="password" placeholder="Password">
 	    <br>
-	    Confirm Password: <input class="" type="text" name="confpass" placeholder="Confirm Password">
+	    Confirm Password: <input class="form-control" type="password" name="confpass" placeholder="Confirm Password">
 	    <br>
-	    <input class="" type="submit" name="Register" value="Register!">
+	    <input class="form-control" type="submit" name="Register" value="Register!">
 	  </form>
 	</div>
       </div>

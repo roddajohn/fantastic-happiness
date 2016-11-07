@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+import utils
 import hashlib, os, utils.user_manager, utils.story_manager
 
 app = Flask(__name__)
@@ -15,49 +16,49 @@ app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\
 
 @app.route("/")
 def mainpage():
-    if(session['username']):
+    if 'username' in session:
         return redirect(url_for("myFeed"))
-    return render_template("login_register.html")
+    return render_template("login.html")
 
 @app.route("/allStories")
 def allFeed():
-    if(session['username']):
+    if 'username' in session:
         stories = utils.story_manager.order_by_timestamp(True)
         return render_template("feed.html",feed = stories)
     return redirect(url_for("mainpage"))
     
 @app.route("/myStories")
 def myFeed():
-    if(session['username']):
+    if 'username' in session:
         userContributions = utils.user_manager.get(session['username']).posts_contributed_to
         listContributionIDs = userContributions.split(",")
         stories = []
-        for(element in listContributionIDs)
+        for element in listContributionIDs:
             stories.append(utils.story_manager.get_story(int(element)))
         return render_template("feed.html",feed = stories)
     return redirect(url_for("mainpage"))
 
 @app.route("/fullPost/<int:postId>", methods=['GET'])
 def fullPost(postId):
-    if(session['username']):
+    if 'username' in session:
         #if(request.form['postID']): # want to put a checker if statement here but dont know how yet
-            story = utils.story_manager.get_story(postID)
-            return render_template("fullPost.html",post = story)
-        return redirect(url_for("myFeed"))
+        story = utils.story_manager.get_story(postID)
+        return render_template("fullPost.html",post = story)
+        #return redirect(url_for("myFeed"))
     return redirect(url_for("mainpage"))
 
 @app.route("/latestUpdate/<int:postID>")
 def latestUpdate(postID):
-    if(session['username']):
+    if 'username' in session:
         #if(request.form['postID']): # want to put a checker if statement here but dont know how yet
-            story = utils.story_manager.get_story(postID)
-            return render_template("latestUpdate.html",post = story)
-        return redirect(url_for("allFeed"))
+        story = utils.story_manager.get_story(postID)
+        return render_template("latestUpdate.html",post = story)
+        #return redirect(url_for("allFeed"))
     return redirect(url_for("mainpage"))
 
 @app.route("/createstory")
 def createStory():
-    if(session['username']):
+    if 'username' in session:
         if(request.form['story'] and request.form['title']):
             user = utils.user_manager.get(session['username'])
             utils.story_manager.create_story(request.form['title'],request.form['text'],user.user_id)
@@ -69,7 +70,7 @@ def createStory():
 
 @app.route("/editPost")
 def editPost():
-    if(session['username']):
+    if 'username' in session:
         if(request.form['postID'] and request.form['edit']):
             user = utils.user_manager.get(session['username'])
             storiesCont = (user.posts_contributed_to).split(",")
@@ -85,11 +86,9 @@ def editPost():
 
 @app.route("/login", methods=['POST'])
 def authenticate():
-    if(key in session):
+    if 'username' in session:
         return redirect(url_for("mainpage"))
-    if(!(key in request.form)         or
-       request.form['username'] == '' or
-       request.form['password'] == ''):
+    if  request.form['username'] == '' or request.form['password'] == '':
         flash("Please fill in all fields!")
         return redirect(url_for("mainpage"))
     loginSuccess = login(request.form['username'],request.form['password'])
@@ -108,13 +107,7 @@ def authenticate():
 def register():
     if(key in session):
         return redirect(url_for("mainpage"))
-    if(!(key in request.form)         or
-       request.form['username'] == '' or
-       request.form['password'] == '' or
-       request.form['first']    == '' or
-       request.form['last']     == '' or
-       request.form['age']      == '' or
-       request.form['email']    == ''):
+    if not key in request.form or request.form['username'] == '' or request.form['password'] == '' or request.form['first']    == '' or request.form['last'] == '' or request.form['age'] == '' or request.form['email'] == '':
         flash("Please fill in all fields!")
         return redirect(url_for("mainpage"))
     if(request.form['password'] != request.form['confpass']):
@@ -132,22 +125,22 @@ def register():
 
 @app.route("/updateSettings")
 def updateSettings():
-    if(session['username']):
-        if(!(key in request.form)):
+    if 'username' in session:
+        if not key in request.form:
             return render_template("settings.html")
         if(request.form['password'] != request.form['confpass']):
             flash("Passwords do not match! Settings not updated")
             return render_template("settings.html")
         user = utils.user_manager.get(session['username'])
-        if(!(request.form['email'] == '')):
+        if not request.form['email'] == '':
             user.email = request.form['email']
-        if(!(request.form['age'] == '')):
+        if not request.form['age'] == '':
             user.age = request.form['age']
-        if(!(request.form['first'] == '')):
+        if not request.form['first'] == '':
             user.first = request.form['first']
-        if(!(request.form['last'] == '')):
+        if not request.form['last'] == '':
             user.last = request.form['last']
-        if(!(request.form['password'] == ''):
+        if not request.form['password'] == '':
             user.password = request.form['password']
         user.update()
         flash("Settings updated!")
@@ -156,7 +149,7 @@ def updateSettings():
 
 @app.route("/logout")
 def logout():
-    if(session['username']):
+    if 'username' in session:
         session.pop('username')
         flash("Successfully logged out!")
         return redirect(url_for("mainpage"))
