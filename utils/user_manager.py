@@ -96,7 +96,7 @@ def register(username,password,first,last,age,email):
         return 0
     c.execute("select user_id from users")
     data=c.fetchall()
-    c.execute("insert into users values ('%d','%s','%s','%s','%s','%d','%s','','')"%(len(data)+1,username,hash(password),first,last,age,email))
+    c.execute("insert into users values ('%d','%s','%s','%s','%s','%d','%s','','')"%(len(data)+1,username,hash(password),first,last,int(age),email))
     db.commit()
     db.close()
     return 1

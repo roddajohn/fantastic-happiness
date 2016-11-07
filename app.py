@@ -24,18 +24,20 @@ def mainpage():
 def allFeed():
     if 'username' in session:
         stories = utils.story_manager.order_by_timestamp(True)
-        return render_template("feed.html",feed = stories)
+        return render_template("myStories.html",feed = stories)
     return redirect(url_for("mainpage"))
     
 @app.route("/myStories")
 def myFeed():
     if 'username' in session:
         userContributions = utils.user_manager.get(session['username']).posts_contributed_to
+        if len(userContributions) == 0:
+            return redirect(url_for("allFeed"))
         listContributionIDs = userContributions.split(",")
         stories = []
         for element in listContributionIDs:
             stories.append(utils.story_manager.get_story(int(element)))
-        return render_template("feed.html",feed = stories)
+        return render_template("myStories.html",feed = stories)
     return redirect(url_for("mainpage"))
 
 @app.route("/fullPost/<int:postId>", methods=['GET'])
@@ -105,9 +107,9 @@ def authenticate():
     
 @app.route("/register", methods=['POST'])
 def register():
-    if(key in session):
+    if('username' in session):
         return redirect(url_for("mainpage"))
-    if not key in request.form or request.form['username'] == '' or request.form['password'] == '' or request.form['first']    == '' or request.form['last'] == '' or request.form['age'] == '' or request.form['email'] == '':
+    if not request.form or request.form['username'] == '' or request.form['password'] == '' or request.form['first']    == '' or request.form['last'] == '' or request.form['age'] == '' or request.form['email'] == '':
         flash("Please fill in all fields!")
         return redirect(url_for("mainpage"))
     if(request.form['password'] != request.form['confpass']):
