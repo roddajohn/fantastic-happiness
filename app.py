@@ -91,7 +91,7 @@ def authenticate():
     if  request.form['username'] == '' or request.form['password'] == '':
         flash("Please fill in all fields!")
         return redirect(url_for("mainpage"))
-    loginSuccess = login(request.form['username'],request.form['password'])
+    loginSuccess = utils.user_manager.login(request.form['username'],request.form['password'])
     if(loginSuccess == 0):
         flash("User does not exist!")
         return redirect(url_for("mainpage"))
@@ -123,7 +123,7 @@ def register():
         flash("Username already taken!")
         return redirect(url_for("mainpage"))
 
-@app.route("/updateSettings")
+@app.route("/updateSettings", methods=['POST'])
 def updateSettings():
     if 'username' in session:
         if not key in request.form:
