@@ -47,7 +47,7 @@ class Story:
 
     #updates the db with the latest values - works
     def update_db(self, c_cur):
-        c_cur.execute("UPDATE stories SET title = ? , last_update = ? , timestamp_last_update = ? , timestamp_created = ? , contributed_to_by_users = ? WHERE story_id = ?",(self.title,self.latest_update,self.timestamp_latest_update,self.timestamp_created,self.contributed_to_by_user_ids,self.story_id))
+        c_cur.execute("UPDATE stories SET title ='%s', last_update ='%s', timestamp_last_update ='%s', timestamp_created ='%s', contributed_to_by_users ='%s' WHERE story_id = '%s'"%(self.title,self.latest_update,self.timestamp_latest_update,self.timestamp_created,self.contributed_to_by_user_ids,self.story_id))
         
     #initializes by setting all values to the given values - works
     def __init__(self, c = None, new = False, title = '', text = '', creator_id = -1):

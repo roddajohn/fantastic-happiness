@@ -68,7 +68,8 @@ def createStory():
     if 'username' in session:
         if(request.form['story'] and request.form['title']):
             user = utils.user_manager.get(session['username'])
-            utils.story_manager.create_story(request.form['title'],request.form['text'],user.user_id)
+            story = utils.story_manager.create_story(request.form['title'],request.form['text'],user.user_id)
+            story.update()
             flash("Story Created!")
             return redirect(url_for("myFeed"))
         flash("Fill in all fields!")
