@@ -37,6 +37,7 @@ def myFeed():
         stories = []
         for element in listContributionIDs:
             stories.append(utils.story_manager.get_story(int(element)))
+        stories.reverse()
         return render_template("myStories.html",feed = stories)
     return redirect(url_for("mainpage"))
 
