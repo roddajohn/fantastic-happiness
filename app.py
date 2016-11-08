@@ -24,7 +24,8 @@ def mainpage():
 def allFeed():
     if 'username' in session:
         stories = utils.story_manager.order_by_timestamp(True)
-        stories.pop(0)
+        if len(stories) > 0:
+            stories.pop(0)
         return render_template("index.html",feed = stories)
     return redirect(url_for("mainpage"))
     
