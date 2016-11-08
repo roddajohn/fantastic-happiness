@@ -85,7 +85,10 @@ def get(un):
 
 #0 username exists
 #1 success
+#2 blank field
 def register(username,password,first,last,age,email):
+    if username=="" or password=="" or first=="" or last=="" or email=="" or age==0:
+        return 2
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select user_id from users where username='%s'"%(username))
