@@ -117,21 +117,30 @@ def authenticate():
 def register():
     if('username' in session):
         return redirect(url_for("mainpage"))
-    if not request.form or request.form['username'] == '' or request.form['password'] == '' or request.form['first']    == '' or request.form['last'] == '' or request.form['age'] == '' or request.form['email'] == '':
-        flash("Please fill in all fields!")
-        return redirect(url_for("mainpage"))
     if(request.form['password'] != request.form['confpass']):
         flash("Passwords must match!")
         return redirect(url_for("mainpage"))
     success = utils.user_manager.register(request.form['username'],request.form['password'],
                                           request.form['first'],request.form['last'],
                                           request.form['age'],request.form['email'])
+    if(success == 2):
+        flash("Please fill in all fields!")
+        return redirect(url_for("mainpage"))
     if(success == 1):
         flash("Success! : Please Sign In!")
         return redirect(url_for("mainpage"))
     if(success == 0):
         flash("Username already taken!")
         return redirect(url_for("mainpage"))
+    if(success == 3):
+        flash("Not enough characters in password.")
+    if(success == 4 or success == 9 or success == 10):
+        flash("No lowercase letter in password.")
+    if(success == 5 or success == 9 or success == 11):
+        flash("No uppercase letter in password.")
+    if(success == 6 or success == 10 or success == 11):
+        flash("No numbers in password.")
+    return redirect(url_for("mainpage"))
 
 @app.route("/updateSettings", methods=['POST'])
 def updateSettings():

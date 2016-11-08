@@ -86,9 +86,45 @@ def get(un):
 #0 username exists
 #1 success
 #2 blank field
+#3 bad password: not enough chars
+#4 bad password: no lowercase letters
+#5 bad password: no uppercase letters
+#6 bad password: no numbers
+#9 4,5
+#10 4,6
+#11 5,6
 def register(username,password,first,last,age,email):
     if username=="" or password=="" or first=="" or last=="" or email=="" or age==0:
         return 2
+    
+    badPw = 0
+    lower = False
+    upper = False
+    num = False
+    for letter in password:
+        if letter is letter.lower():
+            lower = True
+        if letter is letter.upper():
+            upper = True
+        try:
+            hold = int(letter)
+            num = True
+        except:
+            hold = 0
+
+    if not lower:
+        badPw+=4
+    if not upper:
+        badPw+=5
+    if not num:
+        badPw+=6
+            
+    if len(password) < 6:
+        badPw=3
+
+    if badPw > 0:
+        return badPw
+        
     db=sqlite3.connect(f)
     c=db.cursor()
     c.execute("select user_id from users where username='%s'"%(username))
