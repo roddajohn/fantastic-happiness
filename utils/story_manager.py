@@ -6,7 +6,7 @@ class Story:
     latest_update = ""
     timestamp_latest_update = -1
     timestamp_created = -1
-    contributed_to_by_user_ids = "-1"
+    contributed_to_by_user_ids = ""
     c = None
     
     #assigns an id to the story - works
@@ -62,9 +62,11 @@ class Story:
                 new = str(user_id)
             else:
                 new = row[5]+","+str(user_id)
-
+        
         c.execute("UPDATE stories SET contributed_to_by_users='%s' WHERE story_id='%s'"%(new, self.story_id))
         db_close(db)
+
+        self.contributed_to_by_user_ids=new
         
     #initializes by setting all values to the given values - works
     def __init__(self, c = None, new = False, title = '', text = '', creator_id = -1):
