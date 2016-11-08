@@ -48,6 +48,23 @@ class Story:
     #updates the db with the latest values - works
     def update_db(self, c_cur):
         c_cur.execute("UPDATE stories SET title ='%s', last_update ='%s', timestamp_last_update ='%s', timestamp_created ='%s', contributed_to_by_users ='%s' WHERE story_id = '%s'"%(self.title,self.latest_update,self.timestamp_latest_update,self.timestamp_created,self.contributed_to_by_user_ids,self.story_id))
+
+    #updates the string of users that have contributed to this story
+    def contribute(self,user_id):
+        db = get_db()
+        c = get_cursor(db)
+
+        c.execute("select * from stories where story_id='%s'"%(self.story_id))
+        data=c.fetchall()
+        
+        for row in data:
+            if row[5] == "":
+                new = str(user_id)
+            else:
+                new = row[5]+","+str(user_id)
+
+        c.execute("UPDATE stories SET contributed_to_by_users='%s' WHERE story_id='%s'"%(new, self.story_id))
+        db_close(db)
         
     #initializes by setting all values to the given values - works
     def __init__(self, c = None, new = False, title = '', text = '', creator_id = -1):

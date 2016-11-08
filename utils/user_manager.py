@@ -48,6 +48,25 @@ class User:
         self.password=hash(self.password)
         db.commit()
         db.close()
+        
+    def contribute(self,story_id):
+        db=sqlite3.connect(f)
+        c=db.cursor()
+
+        c.execute("select * from users where username='%s'"%(self.username))
+        data=c.fetchall()
+        
+        for row in data:
+            if row[7] == "":
+                new = str(story_id)
+            else:
+                new = row[7]+","+str(story_id)
+    
+        c.execute("UPDATE users SET posts_contributed_to='%s' WHERE username='%s'"%(new, self.username))
+        db.commit()
+        db.close()
+
+        self.posts_contributed_to=new
 
     #updates everything except password
     #user after adding/removing permissions/posts_contributed_to and after changing any user properties except 4 password

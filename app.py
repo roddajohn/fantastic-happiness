@@ -66,6 +66,8 @@ def createStory():
         if(request.form['story'] and request.form['title']):
             user = utils.user_manager.get(session['username'])
             story = utils.story_manager.create_story(request.form['title'],request.form['story'],user.user_id)
+            user.contribute(story.story_id)
+            story.contribute(user.user_id)
             flash("Story Created!")
             return redirect(url_for("myFeed"))
         flash("Fill in all fields!")
@@ -89,6 +91,7 @@ def editPost():
                 return redirect(url_for("myFeed"))
             story = utils.story_manager.get_story(request.form['postID'])
             story.update_story(request.form['story'],user.user_id)
+            user.contribute(story.story_id)
             flash("Story updated!")
             return redirect(url_for("myFeed"))
         return redirect(url_for("allFeed"))
