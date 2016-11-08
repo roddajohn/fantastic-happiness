@@ -135,6 +135,9 @@ def register():
     if(success == 0):
         flash("Username already taken!")
         return redirect(url_for("mainpage"))
+    if(success == 7):
+        flash("Please input an integer value for your age.")
+        return redirect(url_for("mainpage"))
     if(success == 3):
         flash("Not enough characters in password.")
     if(success == 4 or success == 9 or success == 10):

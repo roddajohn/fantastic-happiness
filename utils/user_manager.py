@@ -109,6 +109,7 @@ def get(un):
 #4 bad password: no lowercase letters
 #5 bad password: no uppercase letters
 #6 bad password: no numbers
+#7 age not int
 #9 4,5
 #10 4,6
 #11 5,6
@@ -154,7 +155,10 @@ def register(username,password,first,last,age,email):
         return 0
     c.execute("select user_id from users")
     data=c.fetchall()
-    c.execute("insert into users values ('%d','%s','%s','%s','%s','%d','%s','','')"%(len(data)+1,username,hash(password),first,last,int(age),email))
+    try:
+        c.execute("insert into users values ('%d','%s','%s','%s','%s','%d','%s','','')"%(len(data)+1,username,hash(password),first,last,int(age),email))
+    except ValueError:
+        return 7
     db.commit()
     db.close()
     return 1
