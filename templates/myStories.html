@@ -56,9 +56,9 @@
 	      <td>
 		{{story.title}} - Created on {{story.timestamp_created}} - Contributions made by: {{story.contributed_to_by_user_ids}}
 		<br>
-		Latest contribution last made at {{story.get_timestamp}}
+		Latest contribution at {{story.timestamp_last_update}}
 		<br>
-		{{story.latest_update}}
+		{{story.last_update}}
 		<br>
 		<a href="{{url_for('fullPost', postId=story.story_id)}}">View Full Here</a>
 		<hr>

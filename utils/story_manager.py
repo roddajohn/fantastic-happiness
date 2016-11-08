@@ -6,7 +6,7 @@ class Story:
     latest_update = ""
     timestamp_latest_update = -1
     timestamp_created = -1
-    contributed_to_by_user_ids = ""
+    contributed_to_by_user_ids = "-1"
     c = None
     
     #assigns an id to the story - works
@@ -58,10 +58,13 @@ class Story:
         data=c.fetchall()
         
         for row in data:
+            print row
             if row[5] == "":
                 new = str(user_id)
-            else:
+            elif str(user_id) not in row[5]:
                 new = row[5]+","+str(user_id)
+            else:
+                new = row[5]
         
         c.execute("UPDATE stories SET contributed_to_by_users='%s' WHERE story_id='%s'"%(new, self.story_id))
         db_close(db)

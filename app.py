@@ -47,7 +47,11 @@ def fullPost(postId):
     if 'username' in session:
         user = utils.user_manager.get(session['username'])
         story = utils.story_manager.get_story(postId)
-        usersList = story.contributed_to_by_user_ids.split(",")
+        usersList = []
+        if "," in story.contributed_to_by_user_ids:
+            usersList = story.contributed_to_by_user_ids.split(",")
+        else:
+            usersList.append(story.contributed_to_by_user_ids)
         if user.user_id in usersList:
             return render_template("fullStory.html",post = story)
         else:
