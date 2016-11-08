@@ -1,0 +1,76 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% set active_page = "myStories" %}
+
+{% block content %}
+<br>
+<center>
+  <h4>{{ message }}</h4>
+</center>
+<br>
+<div class="row">
+  <div class="col-sm-3">
+    <div class="panel-body">
+      <a href="{{url_for('renderCreate')}}">Create Your Story Here!</a>
+    </div>
+  </div>
+  <div class="col-sm-9">
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-1">
+  </div>
+  <div class="col-sm-3 text-left">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<center>
+	  <h4>About {{user.username}}</h4>
+	</center>
+      </div>
+      <div class="panel-body">
+	<br>
+	<b><i>First Name: </i></b>{{user.first}}
+	<br>
+	<b><i>Last Name: </i></b>{{user.last}}
+	<br>
+	<b><i>Age: </i></b>{{user.age}}
+	<br>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-7 text-left">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<center>
+	  <h4>Recent Contributions of {{u</h4>
+	</center>
+      </div>
+      <div class="panel-body">
+	<table>
+	  {% for story in feed %}
+	  <tr>
+	    <td>
+	      <a href="{{url_for('latestUpdate', postId=story.story_id)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
+	      <br>
+	      <br>
+	      Contributors: {% for users in story.get_usernames() %}
+	      {{users}}, 
+	      {% endfor %}
+	      <br>
+	      <br>
+	      Latest contribution at {{story.timestamp_last_update}}
+	      <br>
+	      <br>
+	      <hr>
+	      <hr>
+	    </td>
+	  </tr>
+	  {% endfor %}
+	</table>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-1"></div>
+</div>
+{% endblock %}
