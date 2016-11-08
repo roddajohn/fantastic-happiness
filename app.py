@@ -38,6 +38,7 @@ def myFeed():
         listContributionIDs = userContributions.split(",")
         stories = []
         for element in listContributionIDs:
+            print "1"
             stories.append(utils.story_manager.get_story(int(element)))
         return render_template("myStories.html",feed = stories)
     return redirect(url_for("mainpage"))
@@ -45,8 +46,13 @@ def myFeed():
 @app.route("/fullPost/<int:postId>", methods=['GET'])
 def fullPost(postId):
     if 'username' in session:
+        user = utils.user_manager.get(session['username'])
         story = utils.story_manager.get_story(postId)
-        return render_template("fullPost.html",post = story)
+        usersList = story.contributed_to_by_user_ids.split(",")
+        if user.user_id in usersList:
+            return render_template("fullStory.html",post = story)
+        else:
+            return redirect(url_for("mainpage"))
     return redirect(url_for("mainpage"))
 
 @app.route("/latestUpdate/<int:postID>")
