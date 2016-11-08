@@ -107,7 +107,7 @@ def get_story(story_id):
         ret.timestamp_last_update = row[3]
         ret.timestamp_created = row[4]
         ret.contributed_to_by_user_ids = row[5]
-
+        
     db_close(db)
     return ret
 
@@ -138,6 +138,8 @@ def order_by_timestamp(last):
         ret.append(get_story(row[0]))
 
     db_close(db)
+
+    ret.reverse()
     
     return ret
 
