@@ -38,6 +38,7 @@ class Story:
         self.latest_update = text
         try:
             story_file = open("data/stories/"+str(self.story_id)+".txt","r+")
+            print story_file.read()+text
             story_file.write(story_file.read()+text)
         except IOError:
             story_file = open("data/stories/"+str(self.story_id)+".txt","w")

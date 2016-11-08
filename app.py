@@ -50,7 +50,6 @@ def fullPost(postId):
             usersList = story.contributed_to_by_user_ids.split(",")
         else:
             usersList.append(str(story.contributed_to_by_user_ids))
-        print usersList
         if str(user.user_id) in usersList:
             return render_template("fullStory.html",post = story)
         else:
@@ -85,7 +84,7 @@ def createStory():
 @app.route("/editPage/<int:postID>")
 def editPage(postID):
     if 'username' in session:
-        return render_template("editPost.html", post=postID)
+        return render_template("editPost.html", post=utils.story_manager.get_story(postID))
     return redirect(url_for("mainpage"))
 
 @app.route("/editPost", methods=['POST'])
@@ -94,11 +93,11 @@ def editPost():
         if(request.form['postID'] and request.form['story']):
             user = utils.user_manager.get(session['username'])
             storiesCont = (user.posts_contributed_to).split(",")
-            if(request.form['postID'] in storiesCont):
+            if(str(request.form['postID']) in storiesCont):
                 flash("You've already contributed to this story!")
                 return redirect(url_for("myFeed"))
             story = utils.story_manager.get_story(request.form['postID'])
-            story.update_story(request.form['story'],user.user_id)
+            utils.story_manager.update_story(story," "+request.form['story'],user.user_id)
             user.contribute(story.story_id)
             flash("Story updated!")
             return redirect(url_for("myFeed"))
