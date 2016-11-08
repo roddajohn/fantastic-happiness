@@ -45,14 +45,14 @@ def myFeed():
 @app.route("/fullPost/<int:postId>", methods=['GET'])
 def fullPost(postId):
     if 'username' in session:
-        story = utils.story_manager.get_story(postId) ### DOESNT RETURN A VALID STORY CAUSES AN ERROR
+        story = utils.story_manager.get_story(postId)
         return render_template("fullPost.html",post = story)
     return redirect(url_for("mainpage"))
 
 @app.route("/latestUpdate/<int:postID>")
 def latestUpdate(postID):
     if 'username' in session:
-        story = utils.story_manager.get_story(postID) ### DOESNT RETURN A VALID STORY CAUSES AN ERROR
+        story = utils.story_manager.get_story(postID)
         return render_template("latestUpdate.html",post = story)
     return redirect(url_for("mainpage"))
 
