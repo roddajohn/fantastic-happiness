@@ -31,7 +31,24 @@ class Story:
     #returns full text of a story
     def full_text(self):
         return open("data/stories/"+str(self.story_id)+".txt","r").read()
-               
+
+    #returns a list of usernames that have contributed to this story
+    def get_usernames(self):
+        db = get_db()
+        c = get_cursor(db)
+
+        ret = []
+        
+        for user_id in self.contributed_to_by_user_ids.split(","):
+            c.execute("select * from users where user_id='%s'"%(user_id))
+            data=c.fetchall()
+
+            ret.append(data[0][1])
+
+        db.close()
+        return ret
+
+    
     #updates the story's text file and latest_update/timestamp_latest_update/contributed_to_by_user_ids - works
     def update_story(self, text, userid, c_cur):
         self.timestamp_latest_update = get_timestamp()

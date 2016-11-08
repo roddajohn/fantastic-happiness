@@ -53,7 +53,10 @@
 	    {% for story in feed %}
 	    <tr>
 	      <td>
-		{{story.title}} - Created on {{story.timestamp_created}} - Contributors: {{story.contributed_to_by_user_ids}}
+		{{story.title}} - Created on {{story.timestamp_created}} - Contributors: 
+		{% for user in story.get_usernames() %}
+		{{user}}, 
+		{% endfor %}
 		<br>
 		Latest contribution at {{story.timestamp_latest_update}}
 		<br>

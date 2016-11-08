@@ -22,7 +22,10 @@
 	<div class="panel-body">
 	  Created:{{post.timestamp_created}}
 	  <br>
-	  Contributors: {{post.contributed_to_by_user_ids}}
+	  Contributors:
+	  {% for user in post.get_usernames() %}
+	  {{user}},
+	  {% endfor %}
 	  <br>
 	  Latest Contribution made at {{post.timestamp_last_update}}
 	  <br>
