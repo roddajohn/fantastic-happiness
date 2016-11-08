@@ -156,4 +156,4 @@ def update_story(story, text, userid):
 
 #retrieves current time in UTC, seconds since epoch (Jan 1 1970) - works
 def get_timestamp():
-    return time.time()
+    return time.ctime(time.time())
