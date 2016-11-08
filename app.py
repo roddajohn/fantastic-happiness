@@ -38,7 +38,6 @@ def myFeed():
         listContributionIDs = userContributions.split(",")
         stories = []
         for element in listContributionIDs:
-            print "1"
             stories.append(utils.story_manager.get_story(int(element)))
         return render_template("myStories.html",feed = stories)
     return redirect(url_for("mainpage"))
