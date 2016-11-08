@@ -36,6 +36,7 @@
 	<br>
 	<b><i>Age: </i></b>{{user.age}}
 	<br>
+	<b><i>{{ editprofile }}</b></i>
       </div>
     </div>
   </div>
@@ -43,7 +44,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
 	<center>
-	  <h4>Recent Contributions of {{u</h4>
+	  <h4>Recent Contributions of {{user.username}}</h4>
 	</center>
       </div>
       <div class="panel-body">
@@ -60,7 +61,6 @@
 	      <br>
 	      <br>
 	      Latest contribution at {{story.timestamp_last_update}}
-	      <br>
 	      <br>
 	      <hr>
 	      <hr>
