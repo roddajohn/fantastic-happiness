@@ -24,8 +24,6 @@ def mainpage():
 def allFeed():
     if 'username' in session:
         stories = utils.story_manager.order_by_timestamp(True)
-        if len(stories) > 0:
-            stories.pop(0)
         return render_template("index.html",feed = stories)
     return redirect(url_for("mainpage"))
     
@@ -51,8 +49,9 @@ def fullPost(postId):
         if "," in story.contributed_to_by_user_ids:
             usersList = story.contributed_to_by_user_ids.split(",")
         else:
-            usersList.append(story.contributed_to_by_user_ids)
-        if user.user_id in usersList:
+            usersList.append(str(story.contributed_to_by_user_ids))
+        print usersList
+        if str(user.user_id) in usersList:
             return render_template("fullStory.html",post = story)
         else:
             return redirect(url_for("mainpage"))

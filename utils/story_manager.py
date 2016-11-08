@@ -58,7 +58,6 @@ class Story:
         data=c.fetchall()
         
         for row in data:
-            print row
             if row[5] == "":
                 new = str(user_id)
             elif str(user_id) not in row[5]:

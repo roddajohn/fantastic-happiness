@@ -29,7 +29,6 @@
 	  </center>
 	</div>
 	<div class="panel-body">
-	  <br>
 	  <table>
 	    {% for story in feed %}
 	    <tr>
@@ -37,7 +36,6 @@
 		<a href="{{url_for('latestUpdate', postID = story.story_id)}}">{{story.title}} - {{story.timestamp_created}}</a>
 	      </td>
 	    </tr>
-	    <br>
 	    {% endfor %}
 	  </table>
 	</div>
@@ -57,7 +55,7 @@
 	      <td>
 		{{story.title}} - Created on {{story.timestamp_created}} - Contributors: {{story.contributed_to_by_user_ids}}
 		<br>
-		Latest Contribution made at {{story.timestamp}}
+		Latest contribution at {{story.timestamp_latest_update}}
 		<br>
 		{{story.latest_update}}
 		<br>
