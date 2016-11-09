@@ -20,11 +20,26 @@ def mainpage():
         return redirect(url_for("myFeed"))
     return render_template("login.html")
 
+@app.route("/profile/<string:user>")
+def profile(user):
+    if 'username' in session:
+        userObj = utils.user_manager.get(user)
+        userContributions = userObj.posts_contributed_to
+        listContributionIDs = []
+        if len(userContributions) != 0:
+            listContributionIDs = userContributions.split(",")
+        stories = []
+        for element in listContributionIDs:
+            stories.append(utils.story_manager.get_story(int(element)))
+        stories.reverse()
+        return render_template("userpage.html",feed = stories,welcomeuser = session['username'],user = userObj)
+    return redirect(url_for("mainpage"))
+
 @app.route("/allStories")
 def allFeed():
     if 'username' in session:
         stories = utils.story_manager.order_by_timestamp(True)
-        return render_template("index.html",feed = stories)
+        return render_template("index.html",feed = stories,welcomeuser = session['username'])
     return redirect(url_for("mainpage"))
     
 @app.route("/myStories")
@@ -38,7 +53,7 @@ def myFeed():
         for element in listContributionIDs:
             stories.append(utils.story_manager.get_story(int(element)))
         stories.reverse()
-        return render_template("myStories.html",feed = stories)
+        return render_template("myStories.html",feed = stories,welcomeuser = session['username'])
     return redirect(url_for("mainpage"))
 
 @app.route("/fullPost/<int:postId>", methods=['GET'])
@@ -52,7 +67,7 @@ def fullPost(postId):
         else:
             usersList.append(str(story.contributed_to_by_user_ids))
         if str(user.user_id) in usersList:
-            return render_template("fullStory.html",post = story)
+            return render_template("fullStory.html",post = story,welcomeuser = session['username'])
         else:
             return redirect(url_for("mainpage"))
     return redirect(url_for("mainpage"))
@@ -61,12 +76,12 @@ def fullPost(postId):
 def latestUpdate(postID):
     if 'username' in session:
         story = utils.story_manager.get_story(postID)
-        return render_template("latestUpdate.html",post = story)
+        return render_template("latestUpdate.html",post = story,welcomeuser = session['username'])
     return redirect(url_for("mainpage"))
 
 @app.route("/rendercreate")
 def renderCreate():
-    return render_template("createPost.html")
+    return render_template("createPost.html",welcomeuser = session['username'])
 
 @app.route("/createstory", methods=['POST'])
 def createStory():
@@ -85,7 +100,7 @@ def createStory():
 @app.route("/editPage/<int:postID>")
 def editPage(postID):
     if 'username' in session:
-        return render_template("editPost.html", post=utils.story_manager.get_story(postID))
+        return render_template("editPost.html", post=utils.story_manager.get_story(postID),welcomeuser = session['username'])
     return redirect(url_for("mainpage"))
 
 @app.route("/editPost", methods=['POST'])
@@ -158,7 +173,7 @@ def register():
 
 @app.route("/renderupdateSettings")
 def renderSettings():
-    return render_template("settings.html")
+    return render_template("settings.html",welcomeuser = session['username'])
 
 @app.route("/updateSettings", methods=['POST'])
 def updateSettings():

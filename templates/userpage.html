@@ -52,7 +52,7 @@
 	  {% for story in feed %}
 	  <tr>
 	    <td>
-	      <a href="{{url_for('latestUpdate', postId=story.story_id)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
+	      <a href="{{url_for('.latestUpdate', postID=story.story_id)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
 	      <br>
 	      <br>
 	      Contributors: {% for users in story.get_usernames() %}
