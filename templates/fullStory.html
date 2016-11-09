@@ -20,19 +20,22 @@
 	  </center>
 	</div>
 	<div class="panel-body">
-	  Created:{{post.timestamp_created}}
+	  <b>Created:</b> {{post.timestamp_created}}
 	  <br>
-	  Contributors:
+	  <br>
+	  <b>Contributors:</b>
 	  {% for user in post.get_usernames() %}
 	  {{user}},
 	  {% endfor %}
 	  <br>
-	  Latest Contribution made at {{post.timestamp_last_update}}
 	  <br>
-	  Full Text:
+	  <b>Latest Contribution made at: </b>{{post.timestamp_last_update}}
 	  <br>
-	  {{post.full_text()}}
 	  <br>
+	  <b>Full Text:</b>
+	  <br>
+	  <br>
+	  "{{post.full_text()}}"
 	  <br>
 	</div>
       </div>

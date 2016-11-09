@@ -16,24 +16,29 @@
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <center>
-	    <h4>Latest Update to {{post.title}}</h4>
+	    <h4>Latest Update for <i>{{post.title}}<i></h4>
 	  </center>
 	</div>
 	<div class="panel-body">
-	  Created:{{post.timestamp_created}}
+	  <b>Created: </b>{{post.timestamp_created}}
 	  <br>
-	  Contributors:
+	  <br>
+	  <b>Contributors:</b>
 	  {% for user in post.get_usernames() %}
 	  {{user}},
 	  {% endfor %}
 	  <br>
-	  Latest Contribution made at {{post.timestamp_last_update}}
 	  <br>
-	  Latest Update:
+	  <b>Latest Contribution made at: </b><i>{{post.timestamp_last_update}}</i>
 	  <br>
-	  {{post.last_update}}
 	  <br>
-	  <a href="{{url_for('editPage', postID=post.story_id)}}">Want to Contribute to This Story?</a>
+	  <b>Latest Update:</b>
+	  <br>
+	  <br>
+	  "...{{post.last_update}}"
+	  <br>
+	  <br>
+	  <b><i><a href="{{url_for('editPage', postID=post.story_id)}}">Want to Contribute to This Story?</a></i></b>
 	  <br>
 	</div>
       </div>

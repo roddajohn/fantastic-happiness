@@ -10,14 +10,18 @@
 </center>
 <br>
 <div class="row">
-  <div class="col-sm-3">
-    <div class="panel-body">
-      <a href="{{url_for('renderCreate')}}">Create Your Story Here!</a>
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-3">
+      <div class="panel-body">
+	<a href="{{url_for('renderCreate')}}"><b><i>>[Click Here to Create a New Story!]<</i></b></a>
+      </div>
+    </div>
+    <div class="col-sm-7">
+    </div>
+    <div class="col-sm-1">
     </div>
   </div>
-  <div class="col-sm-9">
-  </div>
-</div>
 <div class="row">
   <div class="col-sm-1">
   </div>
@@ -52,15 +56,15 @@
 	  {% for story in feed %}
 	  <tr>
 	    <td>
-	      <a href="{{url_for('.latestUpdate', postID=story.story_id)}}">{{story.title}} - Created on {{story.timestamp_created}}</a>
+	      <b><a href="{{url_for('.latestUpdate', postID=story.story_id)}}">{{story.title}}</b></a> - <i>Created on {{story.timestamp_created}}</i>
 	      <br>
 	      <br>
-	      Contributors: {% for users in story.get_usernames() %}
+	      <b>Contributors: </b>{% for users in story.get_usernames() %}
 	      {{users}}, 
 	      {% endfor %}
 	      <br>
 	      <br>
-	      Latest contribution at {{story.timestamp_last_update}}
+	      <b>Latest contribution at </b>{{story.timestamp_last_update}}
 	      <br>
 	      <hr>
 	      <hr>
