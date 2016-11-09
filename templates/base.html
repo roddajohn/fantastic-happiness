@@ -76,9 +76,9 @@
             <span class="icon-bar"></span>                        
 	  </button>
 	  <a class="navbar-brand" href="{{ url_for('mainpage') }}">Story Time</a>
-	  {% block logoutbutton %}
+	  <!--
 	  <div>Welcome, {{ welcomeuser }}. <a href="{{ url_for('logout') }}">Log Out</a></div>
-	  {% endblock %}
+	  -->
 	</div>
 	<div class="collapse navbar-collapse" id="myNavbar">
 	  <ul class="nav navbar-nav">
@@ -109,9 +109,10 @@
 	    
 	  </ul>
 	  <ul class="nav navbar-nav navbar-right">
-	    {% if user %}
-	      <li><a href="{{ url_for('logout') }}">Logout</a></li>
-	  {% endif %}
+	    {% block logoutbutton %}
+	    <br>
+	    <font color="white">Welcome, {{ welcomeuser }}. </font><a href="{{ url_for('logout') }}"><b><i>Log Out</i></b></a>
+	  {% endblock %}
 	</div>
       </div>
     </nav>
