@@ -156,6 +156,10 @@ def register():
         flash("No numbers in password.")
     return redirect(url_for("mainpage"))
 
+@app.route("/renderupdateSettings")
+def renderSettings():
+    return render_template("settings.html")
+
 @app.route("/updateSettings", methods=['POST'])
 def updateSettings():
     if 'username' in session:
@@ -177,7 +181,7 @@ def updateSettings():
             user.password = request.form['password']
         user.update()
         flash("Settings updated!")
-        return render_template("settings.html")
+        return redirect(url_for("renderSettings"))
     return redirect(url_for("mainpage"))
 
 @app.route("/logout")
