@@ -193,7 +193,7 @@ def register():
 
 @app.route("/renderupdateSettings")
 def renderSettings():
-    return render_template("settings.html",welcomeuser = session['username'])
+    return render_template("Settings.html",welcomeuser = session['username'])
 
 @app.route("/updateSettings", methods=['POST'])
 def updateSettings():

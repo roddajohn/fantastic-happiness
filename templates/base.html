@@ -112,7 +112,7 @@
 	    <br>
 	    <font color="white">Welcome, {{ welcomeuser }}. </font><a href="{{ url_for('logout') }}"><b><i>Log Out</i></b></a>
 	    <br>
-	    <a href="{{ url_for('profile', user=welcomeuser) }}"><b><i>View Profile</i></b></a>
+	    <a href="{{ url_for('profile', user=welcomeuser) }}"><b><i>View Profile</i></b></a><font color="white"> | </font><a href="{{ url_for('renderSettings') }}"><b><i>Settings</i></b></a>
 	  {% endblock %}
 	</div>
       </div>
