@@ -52,11 +52,11 @@
 	    <h4>Recently Updated</h4>
 	  </center>
 	</div>
-	<div class="panel-body">
-	  <table>
+	<div class="panel-body" word-wrap="break-word">
+	  <table table-layout="fixed">
 	    {% for story in feed %}
 	    <tr>
-	      <td>
+	      <td word-wrap="break-word">
 		<b>'{{story.title}}'</b> - <i>Created on {{story.timestamp_created}}</i>
 		<br>
 		<br>

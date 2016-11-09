@@ -63,7 +63,6 @@
     ('allFeed', 'allFeed', 'All Stories', 'user'),
     ('myFeed', 'myFeed', 'My Stories', 'user'),
     ('renderupdateSettings', 'renderupdateSettings', 'Settings', 'user'),
-    ('logout', 'logout', 'Logout', 'user')
     ]
     %}
     {% set active_page = active_page | default('mainpage') %}
@@ -112,6 +111,8 @@
 	    {% block logoutbutton %}
 	    <br>
 	    <font color="white">Welcome, {{ welcomeuser }}. </font><a href="{{ url_for('logout') }}"><b><i>Log Out</i></b></a>
+	    <br>
+	    <a href="{{ url_for('profile', user=welcomeuser) }}"><b><i>View Profile</i></b></a>
 	  {% endblock %}
 	</div>
       </div>
