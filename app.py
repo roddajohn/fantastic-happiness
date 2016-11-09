@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import utils, sqlite3
+import utils, sqlite3, re
 import hashlib, os, utils.user_manager, utils.story_manager
 
 app = Flask(__name__)
@@ -13,6 +13,9 @@ app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\
 # my stories: could be feed
 # full story
 # logout: logout
+
+def fieldChecker(string):
+    return bool(re.search(r'[\\/?%\(\)\'\"\[\]\{\}]',string))
 
 @app.route("/")
 def mainpage():
@@ -146,6 +149,10 @@ def register():
     if(request.form['password'] != request.form['confpass']):
         flash("Passwords must match!")
         return redirect(url_for("mainpage"))
+    for key in request.form:
+        if fieldChecker(request.form[key]):
+            flash("Illegal characters")
+            return redirect(url_for("mainpage"))
     success = utils.user_manager.register(request.form['username'],request.form['password'],
                                           request.form['first'],request.form['last'],
                                           request.form['age'],request.form['email'])
