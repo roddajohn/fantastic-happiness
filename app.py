@@ -14,8 +14,15 @@ app.secret_key = '\x1fBg\x9d\x0cLl\x12\x9aBb\xcd\x17\xb3/\xe4\xca\xf76!\xee\xf2\
 # full story
 # logout: logout
 
+def HTMLChecker(string):
+    return '<' in string or '>' in string
+
 def fieldChecker(string):
-    return bool(re.search(r'[\\/?%\(\)\'\"\[\]\{\}]',string))
+    return bool(re.search(r'[\\/?%\(\)\'\"\[\]\{\}<>]',string))
+
+def sanitize(string):
+    ret = string.replace("'","''")
+    return ret
 
 @app.route("/")
 def mainpage():
@@ -90,8 +97,11 @@ def renderCreate():
 def createStory():
     if 'username' in session:
         if(request.form['story'] and request.form['title']):
+            if HTMLChecker(request.form['story']):
+                flash("No < or > please!")
+                return redirect(url_for("renderCreate"))
             user = utils.user_manager.get(session['username'])
-            story = utils.story_manager.create_story(request.form['title'],request.form['story'],user.user_id)
+            story = utils.story_manager.create_story(request.form['title'],sanitize(request.form['story']),user.user_id)
             user.contribute(story.story_id)
             story.contribute(user.user_id)
             flash("Story Created!")
@@ -110,13 +120,16 @@ def editPage(postID):
 def editPost():
     if 'username' in session:
         if(request.form['postID'] and request.form['story']):
+            if HTMLChecker(request.form['story']):
+                flash("No < or > please!")
+                return redirect(url_for("editPage(request.form['postID'])"))
             user = utils.user_manager.get(session['username'])
             storiesCont = (user.posts_contributed_to).split(",")
             if(str(request.form['postID']) in storiesCont):
                 flash("You've already contributed to this story!")
                 return redirect(url_for("myFeed"))
             story = utils.story_manager.get_story(request.form['postID'])
-            utils.story_manager.update_story(story," "+request.form['story'],user.user_id)
+            utils.story_manager.update_story(story," "+sanitize(request.form['story']),user.user_id)
             user.contribute(story.story_id)
             flash("Story updated!")
             return redirect(url_for("myFeed"))
