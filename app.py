@@ -200,6 +200,10 @@ def updateSettings():
     if 'username' in session:
         if not request.form:
             return render_template("settings.html")
+        for key in request.form:
+            if fieldChecker(request.form[key]):
+                flash("Illegal characters")
+                return redirect(url_for("renderSettings"))
         if(request.form['password'] != request.form['confpass']):
             flash("Passwords do not match! Settings not updated")
             return render_template("settings.html")
@@ -207,7 +211,10 @@ def updateSettings():
         if not request.form['email'] == '':
             user.email = request.form['email']
         if not request.form['age'] == '':
-            user.age = request.form['age']
+            try: user.age = int(request.form['age'])
+            except:
+                flash("Age must be a valid number")
+                return redirect(url_for("renderSettings"))
         if not request.form['first'] == '':
             user.first = request.form['first']
         if not request.form['last'] == '':
