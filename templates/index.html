@@ -14,7 +14,10 @@
     </div>
     <div class="col-sm-3">
       <div class="panel-body">
-	<a href="{{url_for('renderCreate')}}"><b><i>>[Click Here to Create a New Story!]<</i></b></a>
+	<a href="{{url_for('renderCreate')}}"><b><i>Click Here to Create a New Story!</i></b></a>
+	<br>
+	<br>
+	<a href="{{ url_for('myFeed') }}"><b><i>My Stories</i></b></a>
       </div>
     </div>
     <div class="col-sm-7">
@@ -69,7 +72,9 @@
 		<b>Latest contribution at: </b>{{story.timestamp_latest_update}}
 		<br>
 		<br>
+		<p>
 		"...{{story.last_update}}"
+		</p>
 		<br>
 		<br>
 		<i><a href="{{url_for('.latestUpdate', postID = story.story_id)}}">View Latest Contribution</a></i>
